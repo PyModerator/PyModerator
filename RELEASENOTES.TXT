@@ -1,0 +1,144 @@
+
+                  Release Notes for PyModerator 0.3
+                  ---------------------------------
+
+Changes made since 0.2:
+-----------------------
+
+33) Added a "startBoth.py" script that starts a sever and a client at the
+    same time. Somewhat more convenient than using two scripts.
+
+32) Now captures the WM_DELETE_WINDOW event so closing the application window
+    will properly quit the mainloop.
+
+31) Implemented the capability of automatic scheduled postings for things
+    like periodic FAQ postings.
+
+30) Moved Buttons from center bottom to top left to look like toolbars, per
+    the request of Chris Phoenix.
+
+29) Archive searching using Perl-like regular expressions has been implemented.
+
+28) Statistics on approvals and rejections has been implemented.
+
+27) Idle timeout is now implemented. Users leaving inactive clients or
+    network problems will have their connections dropped once they've
+    been inactive for a designated period.
+
+26) A superuser may now delete messages, but only those that have been
+    rejected.
+
+25) Lock status is now shown at the top of the display in friendly red
+    letters, rather than using a pop-up window.
+
+24) Dropped the idea of providing alert e-mails. A lot of work for very
+    marginal value.
+
+23) Create and edit dialogue windows now prevent multiple keypresses of edit
+    or create from entering more than one local loop per window.
+
+22) After some consideration, decided to drop the idea of implementing
+    Usenet cancels. They are rarely needed, and when they are, there are
+    existing tools that will do the job well enough.
+
+21) Changes to balloon help toggle are now persistent.
+
+20) Display of moderators at the top of the screen has been cleaned up.
+
+19) Dates and times are now converted to the user's local time zone.
+
+18) After some consideration, decided to drop the idea of implementing
+    follow-up postings. Existing Usenet tools often have more fuller
+    functions (e.g. spell checkers, grammar, line wrap, quoting) that would
+    be silly to reproduce. Moderators should use those tools to compose and
+    submit messages.
+
+17) Added Guest type user. Now have 3 classes of users: moderators, superusers
+    (just moderators with more functions) and guests (can look but nothing
+    is active).
+
+16) Archive summary list now shows all message IDs and does on-demand retrieval
+    of summaries when a previously unretrieved entry is selected. Grabs 30
+    at a time. This will be important as the archive grows into the thousands.
+
+15) Added colorization to "new material" and "bad cross posting" warnings.
+
+14) Added option to edit Bcc and From headers on outgoing e-mails.
+
+13) Added automatic 80 column word wrapping to all text fields.
+
+12) Dropped the display of paragraph marks.
+
+11) Database and protocol changes:
+        ServerRWData:
+            idleTimeLogout  Added. Integer.
+
+        ModeratorRWData:
+            moderatorAlias  Dropped.
+            alertAddress    Dropped.
+            vacation        Added. Boolean.
+
+        ModeratorROData:
+            createTime      Changed from string to Unix epoch integers.
+            superuser       Dropped.
+            userType        Added. "Moderator", "Superuser", "Guest".
+
+        NewsGroupRWData:
+            quotingYellow   Added. Integer. Warning level for quoted material.
+            quotingRed      Added. Integer. Warning level for quoted material.
+
+        NewsGroupROData:
+            createTime      Changed from string to Unix epoch integers.
+            periodicPosts   Added. {messageID: [[nextSendTime, repeatTime]] }
+            statistics      Added. Dictionary of per newsgroup collected stats.
+
+        RejectionROData:
+            createTime      Changed from string to Unix epoch integers.
+
+        EventROData:
+            timeStamp       Changed from string to Unix epoch integers.
+    Also changed command ModeratorSuperuser to ModeratorChangeType.
+
+Bugs fixed since 0.1:
+---------------------
+
+10) On Windows, the optionDB file settings were getting ignored. Also users
+    should use wordpad, not notepad, for editing the file.
+
+ 9) When more than one moderator is logged in, then some sort of server lock
+    needs to be implemented on messages being edited or viewed by a moderator
+    so that moderator's don't step over each other when working on the same
+    message.
+
+ 8) The moderator ID for the Receive event should really be the moderator that
+    was initially assigned the message, not the moderator that caused the
+    POP server to be read.
+
+ 7) Reject-and-reply was putting non-string data into the event detail when
+    one cancelled (and cancel was being treated as "ok"). This would cause
+    a Tk exception.
+
+ 6) Doh! Repeat of bug 1, but missed the fix on the server side!
+
+Bugs fixed since 0.0:
+---------------------
+
+ 5) File -> Logout brings up a couple warning boxes telling you that you are
+    not connected to the server.
+
+ 4) After logging out, you can still select a newsgroup from the Moderate menu
+    which will cause a series of warning boxes, ending with a exception.
+
+ 3) When rejecting a posting and the default action includes an e-mail reply,
+    any attempt to press the return key while composing the reply text will
+    unconditionally send the message! It should just insert a carriage return
+    into the text.
+
+ 2) Leading and trailing whitespace in data entry fields is being treated as
+    significant. It is now trimmed on the client side (except for passwords,
+    where it still remains significant) after data entry.
+
+ 1) Socket connect was being given two arguments rather than a single tuple.
+    Two arguments used to be accepted but was not technically proper form.
+    Python 1.6 and above no longer allow that form.
+

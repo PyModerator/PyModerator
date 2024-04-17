@@ -1,0 +1,57 @@
+
+                    Bugs and Things To Do after Release 0.3
+                    ---------------------------------------
+
+Outstanding  Bugs:
+------------------
+
+* There isn't any documentation!
+
+* If you are in the middle of adding moderator comments to a message or have
+  edited the headers and then select another message, you lose all your
+  work on the message. One way to avoid that problem would be to create
+  a new message view window when a list item is double-clicked. That way each
+  message view window would maintain state information independently. However,
+  client side locking would need to be changed since it assumes only one
+  message is locked at any given time.
+
+Wish List:
+----------
+
+* The code is a bloody mess! It really needs to be re-organized and it suffers
+  from some bad design decisions. Someday it should be cleaned up.
+
+* Would be nice if one could designate one's favorite editor or e-mail
+  program to be launched when editing a user's submission or a followup
+  or e-mail response.
+
+* E-mail alert notifications indicating that there are messages waiting to be
+  reviewed would be nice.
+
+* Would be nice to search long messages using regular expressions.
+
+* Column headers on the Review, Limbo, Archive, and Event lists would be
+  very helpful!
+
+* There needs to be some way for new moderators to test their setups; insertion
+  of test messages when no POP account ready and posting to misc.test
+  for test posts.
+
+* Usenet cancel capability would be nice. However, since 3rd party cancels
+  would be the ones most useful (e.g. forged approvals) and there may be
+  problems with the way some servers honor cancels, and there being other
+  software that can do this, it was not attempted. In the long run it might
+  prove handy.
+
+* Posting a follow-up from PyModerator would be nice. However, spell checking,
+  quoting, grammar checking, word wrap at at column 72, providing user
+  editing preferences, and the possible need for client-side generation of
+  Message-ID headers combine to make this a problem not worth attempting.
+  Best to have the moderator wait a bit for the article to show up at the
+  moderator's Usenet server and use existing tools to reply as would anyone
+  else.
+
+* There really should be a common Admin e-mail reply-to address for e-mails
+  sent to posters. That way replies could be attached to messages for all
+  moderators to see. Not sure the best way to implement that though.
+

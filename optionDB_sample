@@ -1,0 +1,9 @@
+*Font:                  Arial 8 bold
+*EntryField.Entry.Font: Courier 8
+*Listbox*Font:          Courier 8
+*Text*Font:             Courier 8
+
+# *Font:                    Arial 10 bold
+# *EntryField.Entry.Font:   LinePrinter 10
+# *Listbox*Font:            LinePrinter 10
+# *Text*Font:               LinePrinter 10
