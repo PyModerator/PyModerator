@@ -78,7 +78,7 @@ def EditAModerator(moderatorID):
     if buttonSelect == "OK":
         rsp = ModeratorUpdate(moderatorID, moderator.rw)
         if rsp == None:
-            newNewsGroupIDs = moderator.ro.newsGroupIDs
+            newNewsGroupIDs = list(moderator.ro.newsGroupIDs)
             newNewsGroupIDs.sort()
             if oldNewsGroupIDs <> newNewsGroupIDs:
                 for newsGroupID in cliVar.svr.ro.newsGroupIDs:

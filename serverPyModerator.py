@@ -231,7 +231,7 @@ def NewsGroupModerators(newsGroupID, moderatorIDs, modContext):
     app = serVar.app
     newsGroupFile = GetNewsGroup(newsGroupID)
     newsGroup = newsGroupFile.newsGroupData
-    newModeratorIDs = moderatorIDs
+    newModeratorIDs = list(moderatorIDs)
     newModeratorIDs.sort()
     oldModeratorIDs = newsGroup.ro.moderatorIDs[:]
     oldModeratorIDs.sort()
