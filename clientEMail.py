@@ -11,8 +11,6 @@ import sys
 from tkinter import *
 from clientInterfaces import *
 
-sstrip = string.strip
-
 def SendEMailReply(message, otherText):
     app = cliVar.app
     if cliVar.sockFile == None:
@@ -94,9 +92,9 @@ class EMailDialog(altDialog.AltDialog):
         return self.bodyLinesW.component("text")
 
     def Apply(self):
-        self.fromLine = sstrip(self.fromLineW.get())
-        self.toLine = sstrip(self.toLineW.get())
-        self.bccLine = sstrip(self.bccW.get())
-        self.subjectLine = sstrip(self.subjectLineW.get())
+        self.fromLine = self.fromLineW.get().strip()
+        self.toLine = self.toLineW.get().strip()
+        self.bccLine = self.bccW.get().strip()
+        self.subjectLine = self.subjectLineW.get().strip()
         self.bodyLines = self.bodyLinesW.get()
 

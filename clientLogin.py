@@ -11,8 +11,6 @@ import string
 from tkinter import *
 from clientInterfaces import *
 
-sstrip = string.strip
-
 class EditLoginData(altDialog.AltDialog):
     def SetFields(self):
         if self.inUse:
@@ -56,14 +54,14 @@ class EditLoginData(altDialog.AltDialog):
     def Apply(self):
         app = cliVar.app
         cache = app.cache
-        cache.loginID = sstrip(self.moderatorID.get())
-        cache.serviceHost = sstrip(self.serviceHost.get())
-        cache.servicePort = int(sstrip(self.servicePort.get()))
-        cache.nntpHost = sstrip(self.nntpHost.get())
-        cache.nntpPort = int(sstrip(self.nntpPort.get()))
-        cache.nntpUser = sstrip(self.nntpUser.get())
+        cache.loginID = self.moderatorID.get().strip()
+        cache.serviceHost = self.serviceHost.get().strip()
+        cache.servicePort = int(self.servicePort.get().strip())
+        cache.nntpHost = self.nntpHost.get().strip()
+        cache.nntpPort = int(self.nntpPort.get().strip())
+        cache.nntpUser = self.nntpUser.get().strip()
         cache.nntpPassword = self.nntpPassword.get()
-        cache.smtpHost = sstrip(self.smtpHost.get())
+        cache.smtpHost = self.smtpHost.get().strip()
         app.WriteCache()
 
 class LoginDialog(altDialog.AltDialog):
@@ -91,7 +89,7 @@ class LoginDialog(altDialog.AltDialog):
     def Apply(self):
         app = cliVar.app
         cache = app.cache
-        cache.loginID = sstrip(self.moderatorID.get())
+        cache.loginID = self.moderatorID.get().strip()
         app.password = self.password.get()
 
 class ChangePassword(altDialog.AltDialog):
@@ -121,7 +119,7 @@ class ChangePassword(altDialog.AltDialog):
         return self.moderatorID.component("entry")
 
     def Validate(self):
-        mID = sstrip(self.moderatorID.get())
+        mID = self.moderatorID.get().strip()
         pw1 = self.password1.get()
         pw2 = self.password2.get()
         if pw1 != pw2:

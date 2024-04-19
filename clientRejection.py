@@ -14,8 +14,6 @@ import string
 from tkinter import *
 from clientInterfaces import *
 
-sstrip = string.strip
-
 def UpdateRejectionDisplayList():
     app = cliVar.app
     if cliVar.currentNewsGroupID:
@@ -175,7 +173,7 @@ class EditRejectionDialog(altDialog.AltDialog):
     def Apply(self):
         rw = self.rejection.rw
         ro = self.rejection.ro
-        ro.rejectionID = sstrip(self.rejectionID.get())
+        ro.rejectionID = self.rejectionID.get().strip()
         rw.emailTemplate = self.emailTemplate.get()
         rw.defaultAction = self.defaultAction.getcurselection()
 

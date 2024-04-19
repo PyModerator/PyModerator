@@ -12,8 +12,6 @@ import string
 from tkinter import *
 from clientInterfaces import *
 
-sstrip = string.strip
-
 def UpdateDisplayList():
     svr = ServerGet()
     if svr:
@@ -169,9 +167,9 @@ class EditModeratorDialog(altDialog.AltDialog):
     def Apply(self):
         rw = self.moderator.rw
         ro = self.moderator.ro
-        ro.moderatorID = sstrip(self.moderatorID.get())
-        rw.fromAddress = sstrip(self.fromAddress.get())
-        rw.name = sstrip(self.name.get())
+        ro.moderatorID = self.moderatorID.get().strip()
+        rw.fromAddress = self.fromAddress.get().strip()
+        rw.name = self.name.get().strip()
         rw.vacation = self.vacation.index(self.vacation.getcurselection())
         ro.userType = self.userType.getcurselection()
         ro.newsGroupIDs = self.newsGroupIDs.getcurselection()

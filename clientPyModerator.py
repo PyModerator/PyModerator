@@ -30,8 +30,6 @@ from clientEMail import *
 from clientSearchArchive import *
 from clientScheduleMsgs import *
 
-sstrip = string.strip
-
 class CachedData:
     def __init__(self):
         self.loginID = ""
@@ -373,12 +371,12 @@ class EditServerData(altDialog.AltDialog):
 
     def Validate(self):
         tmpRW = ServerRWData()
-        tmpRW.nntpHost = sstrip(self.nntpHost.get())
-        tmpRW.nntpPort = int(sstrip(self.nntpPort.get()))
-        tmpRW.nntpUser = sstrip(self.nntpUser.get())
+        tmpRW.nntpHost = self.nntpHost.get().strip()
+        tmpRW.nntpPort = int(self.nntpPort.get().strip())
+        tmpRW.nntpUser = self.nntpUser.get().strip()
         tmpRW.nntpPassword = self.nntpPassword.get()
-        tmpRW.smtpHost = sstrip(self.smtpHost.get())
-        tmpRW.idleTimeLogout = int(sstrip(self.idleTimeLogout.get()))
+        tmpRW.smtpHost = self.smtpHost.get().strip()
+        tmpRW.idleTimeLogout = int(self.idleTimeLogout.get().strip())
         if ServerUpdate(tmpRW) == None:
             cliVar.svr.rw = tmpRW
             return 1

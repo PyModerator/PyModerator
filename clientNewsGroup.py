@@ -12,8 +12,6 @@ import string
 from tkinter import *
 from clientInterfaces import *
 
-sstrip = string.strip
-
 def UpdateDisplayList():
     svr = ServerGet()
     if svr:
@@ -178,18 +176,18 @@ class EditNewsGroupDialog(altDialog.AltDialog):
     def Apply(self):
         rw = self.newsGroup.rw
         ro = self.newsGroup.ro
-        ro.newsGroupID = sstrip(self.newsGroupID.get())
-        rw.popHost = sstrip(self.popHost.get())
-        rw.popPort = int(sstrip(self.popPort.get()))
-        rw.popUserID = sstrip(self.popUserID.get())
+        ro.newsGroupID = self.newsGroupID.get().strip()
+        rw.popHost = self.popHost.get().strip()
+        rw.popPort = int(self.popPort.get().strip())
+        rw.popUserID = self.popUserID.get().strip()
         rw.popPassword = self.popPassword.get()
         w = self.allowCrossPosts
         rw.allowCrossPosts = w.index(w.getcurselection())
         w = self.roundRobinAssign
         rw.roundRobinAssign = w.index(w.getcurselection())
-        rw.quotingYellow = int(sstrip(self.quotingYellow.get()))
-        rw.quotingRed = int(sstrip(self.quotingRed.get()))
-        rw.popHost = sstrip(self.popHost.get())
+        rw.quotingYellow = int(self.quotingYellow.get().strip())
+        rw.quotingRed = int(self.quotingRed.get().strip())
+        rw.popHost = self.popHost.get().strip()
         w = self.postFromServer
         rw.postFromServer = w.index(w.getcurselection())
         ro.moderatorIDs = self.moderators.getcurselection()
