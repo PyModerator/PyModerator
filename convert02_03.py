@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import cPickle
+import pickle
 from convTime import StrTimeToInt
 from  commonDefs02 import *
 import serVar
@@ -9,15 +9,15 @@ import serVar
 
 dataFile = open(serVar.path + "/server.cfg", "rb+")
 dataFile.seek(0)
-appVersion = cPickle.load(dataFile)
-ro, rw, cryptedPasswords = cPickle.load(dataFile)
+appVersion = pickle.load(dataFile)
+ro, rw, cryptedPasswords = pickle.load(dataFile)
 
 # Do conversions.
 
 rw.idleTimeLogout = 900
 
-for moderator in ro.moderators.values():
-    print moderator.ro.moderatorID
+for moderator in list(ro.moderators.values()):
+    print(moderator.ro.moderatorID)
     if moderator.ro.superuser:
         moderator.ro.userType = "Superuser"
     else:
@@ -33,18 +33,18 @@ for moderator in ro.moderators.values():
 # Write new server data out.
 
 dataFile.seek(0)
-cPickle.dump("0.3", dataFile, 1)
-cPickle.dump((ro, rw, cryptedPasswords), dataFile, 1)
+pickle.dump("0.3", dataFile, 1)
+pickle.dump((ro, rw, cryptedPasswords), dataFile, 1)
 dataFile.close()
 
 for newsGroupID in ro.newsGroupIDs:
-    print newsGroupID
+    print(newsGroupID)
     # Read old newsgroup data.
     baseDir = "%s/%s" % (serVar.path, newsGroupID)
     baseCfg = "%s/%s" % (baseDir, "newsGroupData.cfg")
     grpFile = open(baseCfg, "rb+")
     grpFile.seek(0)
-    newsGroup = cPickle.load(grpFile)
+    newsGroup = pickle.load(grpFile)
 
     # Do conversion
     newsGroup.ro.createTime = StrTimeToInt(newsGroup.ro.createTime)
@@ -54,14 +54,14 @@ for newsGroupID in ro.newsGroupIDs:
     newsGroup.rw.quotingRed = 10
     del newsGroup.rw.idleTimeLogout
 
-    for rejection in newsGroup.ro.rejections.values():
+    for rejection in list(newsGroup.ro.rejections.values()):
         rejection.ro.createTime = StrTimeToInt(rejection.ro.createTime)
 
     # Convert messages:
     for messageID in range(newsGroup.ro.numMessages):
-        print messageID
+        print(messageID)
         # Read old message data.
-        msg = cPickle.load(open("%s/%06d" % (baseDir, messageID), "rb+"))
+        msg = pickle.load(open("%s/%06d" % (baseDir, messageID), "rb+"))
 
         # Do conversion.
         for event in msg.ro.events:
@@ -77,7 +77,7 @@ for newsGroupID in ro.newsGroupIDs:
             elif event.rw.eventType[:7] == "Reject:":
                 rejectID = event.rw.eventType[8:]
                 if rejectID not in stats[""]:
-                    for k, v in stats.items():
+                    for k, v in list(stats.items()):
                         if k == "":
                             v.append(rejectID)
                         else:
@@ -89,7 +89,7 @@ for newsGroupID in ro.newsGroupIDs:
                 if evt not in ["", "Received", "Assigned", "Email", "Reassign",
                                 "Note"]:
                     if evt not in stats[""]:
-                        for k, v in stats.items():
+                        for k, v in list(stats.items()):
                             if k == "":
                                 v.append(evt)
                             else:
@@ -99,10 +99,10 @@ for newsGroupID in ro.newsGroupIDs:
                 modRow[col] = modRow[col] + 1
 
         # Write new message data.
-        cPickle.dump(msg, open("%s/%06d" % (baseDir, messageID), "wb+"), 1)
+        pickle.dump(msg, open("%s/%06d" % (baseDir, messageID), "wb+"), 1)
 
     # Write new newsgroup data.
     grpFile.seek(0)
-    cPickle.dump(newsGroup, grpFile, 1)
+    pickle.dump(newsGroup, grpFile, 1)
     grpFile.close()
 

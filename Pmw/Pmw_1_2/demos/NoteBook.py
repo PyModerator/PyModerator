@@ -4,7 +4,7 @@ title = 'Pmw.NoteBook demonstration'
 import sys
 sys.path[:0] = ['../../..']
 
-import Tkinter
+import tkinter
 import Pmw
 
 class Demo:
@@ -20,9 +20,9 @@ class Demo:
         # Create the "Toolbar" contents of the page.
         group = Pmw.Group(page, tag_text = 'Toolbar')
         group.pack(fill = 'both', expand = 1, padx = 10, pady = 10)
-        b1 = Tkinter.Checkbutton(group.interior(), text = 'Show toolbar')
+        b1 = tkinter.Checkbutton(group.interior(), text = 'Show toolbar')
         b1.grid(row = 0, column = 0)
-        b2 = Tkinter.Checkbutton(group.interior(), text = 'Toolbar tips')
+        b2 = tkinter.Checkbutton(group.interior(), text = 'Toolbar tips')
         b2.grid(row = 0, column = 1)
 
         # Create the "Startup" contents of the page.
@@ -42,11 +42,11 @@ class Demo:
 
 # Create demo in root window for testing.
 if __name__ == '__main__':
-    root = Tkinter.Tk()
+    root = tkinter.Tk()
     Pmw.initialise(root)
     root.title(title)
 
     widget = Demo(root)
-    exitButton = Tkinter.Button(root, text = 'Exit', command = root.destroy)
+    exitButton = tkinter.Button(root, text = 'Exit', command = root.destroy)
     exitButton.pack()
     root.mainloop()

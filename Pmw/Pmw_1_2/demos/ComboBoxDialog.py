@@ -4,7 +4,7 @@ title = 'Pmw.ComboBoxDialog demonstration'
 import sys
 sys.path[:0] = ['../../..']
 
-import Tkinter
+import tkinter
 import Pmw
 
 class Demo:
@@ -20,24 +20,24 @@ class Demo:
 	self.dialog.withdraw()
 
 	# Create button to launch the dialog.
-	w = Tkinter.Button(parent,
+	w = tkinter.Button(parent,
 		text = 'Show combo box dialog',
 		command = self.doit)
 	w.pack(padx = 8, pady = 8)
 
     def doit(self):
         result = self.dialog.activate()
-	print 'You clicked on', result, self.dialog.get()
+	print('You clicked on', result, self.dialog.get())
 
 ######################################################################
 
 # Create demo in root window for testing.
 if __name__ == '__main__':
-    root = Tkinter.Tk()
+    root = tkinter.Tk()
     Pmw.initialise(root)
     root.title(title)
 
-    exitButton = Tkinter.Button(root, text = 'Exit', command = root.destroy)
+    exitButton = tkinter.Button(root, text = 'Exit', command = root.destroy)
     exitButton.pack(side = 'bottom')
     widget = Demo(root)
     root.mainloop()

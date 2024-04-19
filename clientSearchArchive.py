@@ -6,7 +6,7 @@ import Pmw
 import altDialog
 import cliVar
 import string
-from Tkinter import *
+from tkinter import *
 from clientInterfaces import *
 
 def DoSearch():

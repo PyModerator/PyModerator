@@ -7,7 +7,7 @@ import Pmw
 import cliVar
 import string
 import sys
-from Tkinter import *
+from tkinter import *
 from clientInterfaces import *
 
 rcvdHdr = "%sMessage %d Received As:"
@@ -24,7 +24,7 @@ class RcvdMsg(Pmw.ScrolledText):
             self.configure(label_fg = "red")
         else:
             self.configure(label_fg = "black")
-        hdrItems = message.rw.inHeaders.items()
+        hdrItems = list(message.rw.inHeaders.items())
         hdrItems.sort()
         reHdrs = ""
         otHdrs = ""
@@ -60,7 +60,7 @@ class PostMsg(Frame):
     def UpdateFromIn(self, message):
         for hdr in outHdrs:
             val = message.rw.inHeaders.get((hdr, 0))
-            if val <> None:
+            if val != None:
                 self.widgets[hdr].setentry(val)
             else:
                 self.widgets[hdr].setentry("")
@@ -73,7 +73,7 @@ class PostMsg(Frame):
     def UpdateFromOut(self, message):
         for hdr in outHdrs:
             val = message.ro.outHeaders.get((hdr, 0))
-            if val <> None:
+            if val != None:
                 self.widgets[hdr].setentry(val)
             else:
                 self.widgets[hdr].setentry("")

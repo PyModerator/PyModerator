@@ -4,7 +4,7 @@ title = 'Pmw.HistoryText demonstration'
 import sys
 sys.path[:0] = ['../../..']
 
-import Tkinter
+import tkinter
 import Pmw
 
 class Demo:
@@ -38,7 +38,7 @@ class Demo:
             ['Redo', self.historyText.redo],
             [20, None],
             ['Prev', self.historyText.prev],
-            ['Next', self.historyText.next],
+            ['Next', self.historyText.__next__],
             [30, None],
             ['Execute', Pmw.busycallback(self.executeQuery)],
         )
@@ -47,10 +47,10 @@ class Demo:
         buttonFrame = panedWidget.pane('buttons')
         for text, cmd in buttonList:
             if type(text) == type(69):
-                frame = Tkinter.Frame(buttonFrame, width = text)
+                frame = tkinter.Frame(buttonFrame, width = text)
                 frame.pack(side = 'left')
             else:
-                button = Tkinter.Button(buttonFrame, text = text, command = cmd)
+                button = tkinter.Button(buttonFrame, text = text, command = cmd)
                 button.pack(side = 'left')
                 self.buttonDict[text] = button
 
@@ -92,11 +92,11 @@ class Demo:
 
 # Create demo in root window for testing.
 if __name__ == '__main__':
-    root = Tkinter.Tk()
+    root = tkinter.Tk()
     Pmw.initialise(root)
     root.title(title)
 
-    exitButton = Tkinter.Button(root, text = 'Exit', command = root.destroy)
+    exitButton = tkinter.Button(root, text = 'Exit', command = root.destroy)
     exitButton.pack(side = 'bottom')
     widget = Demo(root)
     root.mainloop()

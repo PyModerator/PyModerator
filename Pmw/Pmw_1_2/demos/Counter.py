@@ -6,14 +6,14 @@ sys.path[:0] = ['../../..']
 
 import string
 import time
-import Tkinter
+import tkinter
 import Pmw
 
 class Demo:
     def __init__(self, parent):
 	# Need to use long ints here because on the Macintosh the maximum size
 	# of an integer is smaller than the value returned by time.time().
-	now = (long(time.time()) / 300) * 300
+	now = (int(time.time()) / 300) * 300
 
 	# Create the Counters.
 	self._date = Pmw.Counter(parent,
@@ -82,7 +82,7 @@ class Demo:
 	self._int.pack(padx=10, pady=5)
 
     def execute(self):
-	print 'Return pressed, value is', self._date.get()
+	print('Return pressed, value is', self._date.get())
 
 specialword = 'Monti Python ik den Holie Grailen (Bok)'
 
@@ -98,24 +98,24 @@ def _custom_counter(text, factor, increment):
 	length = len(text)
 	if factor == 1:
 	    if length >= len(specialword):
-		raise ValueError, 'maximum length reached'
+		raise ValueError('maximum length reached')
 	    return specialword[:length + 1]
 	else:
 	    if length == 0:
-		raise ValueError, 'empty string'
+		raise ValueError('empty string')
 	    return specialword[:length - 1]
     else:
-	raise ValueError, 'bad string ' + text
+	raise ValueError('bad string ' + text)
 
 ######################################################################
 
 # Create demo in root window for testing.
 if __name__ == '__main__':
-    root = Tkinter.Tk()
+    root = tkinter.Tk()
     Pmw.initialise(root)
     root.title(title)
 
-    exitButton = Tkinter.Button(root, text = 'Exit', command = root.destroy)
+    exitButton = tkinter.Button(root, text = 'Exit', command = root.destroy)
     exitButton.pack(side = 'bottom')
     widget = Demo(root)
     root.mainloop()

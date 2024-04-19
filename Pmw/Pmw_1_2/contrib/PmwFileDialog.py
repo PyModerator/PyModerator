@@ -17,7 +17,7 @@ __version__ = '$Id: PmwFileDialog.py,v 1.2 2002/08/23 15:03:35 gregm Exp $'
 #
 ################################################################################
 import os,fnmatch,time
-import Tkinter,Pmw
+import tkinter,Pmw
 #Pmw.setversion("0.8.5")
 
 def _errorpop(master,text):
@@ -97,7 +97,7 @@ class PmwFileDialog(Pmw.Dialog):
         return self.createcomponent(
                 'infobox',
                 (), None,
-                Tkinter.Label, (self.interior(),),
+                tkinter.Label, (self.interior(),),
                 width=51,
                 relief='groove',
                 foreground='darkblue',
@@ -313,7 +313,7 @@ class PmwFileDialog(Pmw.Dialog):
         try:
             fl=os.listdir(dir)
             fl.sort()
-        except os.error,arg:
+        except os.error as arg:
             if arg[0] in (2,20):
                 return
             raise
@@ -392,7 +392,7 @@ class PmwDirDialog(PmwFileDialog):
         try:
             fl=os.listdir(dir)
             fl.sort()
-        except os.error,arg:
+        except os.error as arg:
             if arg[0] in (2,20):
                 return
             raise
@@ -480,14 +480,14 @@ class PmwExistingDirDialog(PmwDirDialog):
             _errorpop(self.interior(),"Please select an existing directory")
     
 if __name__=="__main__":
-    root=Tkinter.Tk()
+    root=tkinter.Tk()
     root.withdraw()
     Pmw.initialise()
 
     f0=PmwFileDialog(root)
     f0.title('File name dialog')
     n=f0.askfilename()
-    print '\nFilename : ',repr(n),'\n'
+    print('\nFilename : ',repr(n),'\n')
 
     f1=PmwDirDialog(root,info='This is a directory dialog')
     f1.title('Directory name dialog')
@@ -495,4 +495,4 @@ if __name__=="__main__":
 	n=f1.askfilename()
 	if n is None:
 	    break
-	print "Dirname : ",repr(n)
+	print("Dirname : ",repr(n))

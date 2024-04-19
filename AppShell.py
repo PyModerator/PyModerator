@@ -11,7 +11,7 @@ J. Logajan note: AppShell.py in turn was obtained from John E. Grayson's
 
 """
 
-from Tkinter import *
+from tkinter import *
 import Pmw
 import sys, string, os
 import ProgressBar

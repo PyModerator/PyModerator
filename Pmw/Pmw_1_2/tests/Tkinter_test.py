@@ -1,12 +1,12 @@
 # Tests for basic Tkinter widgets.
 
-import Tkinter
+import tkinter
 import Test
 
 Test.initialise()
 testData = ()
 
-if Tkinter.TkVersion >= 8.0:
+if tkinter.TkVersion >= 8.0:
   button_num = 31
   frame_num = 16
   menu_num = 20
@@ -17,7 +17,7 @@ else:
   menu_num = 19
   menubutton_num = 31
 
-c = Tkinter.Button
+c = tkinter.Button
 tests = (
   (c.pack, ()),
   (Test.num_options, (), button_num),
@@ -30,7 +30,7 @@ tests = (
 )
 testData = testData + ((c, ((tests, {}),)),)
 
-c = Tkinter.Canvas
+c = tkinter.Canvas
 tests = (
   (c.pack, ()),
   (Test.num_options, (), 27),
@@ -71,7 +71,7 @@ tests = (
 )
 testData = testData + ((c, ((tests, {}),)),)
 
-c = Tkinter.Checkbutton
+c = tkinter.Checkbutton
 tests = (
   (c.pack, ()),
   (Test.num_options, (), 36),
@@ -84,7 +84,7 @@ tests = (
 )
 testData = testData + ((c, ((tests, {}),)),)
 
-c = Tkinter.Entry
+c = tkinter.Entry
 tests = (
   (c.pack, ()),
   (Test.num_options, (), 28),
@@ -100,7 +100,7 @@ tests = (
 )
 testData = testData + ((c, ((tests, {}),)),)
 
-c = Tkinter.Frame
+c = tkinter.Frame
 tests = (
   (c.pack, ()),
   (Test.num_options, (), frame_num),
@@ -111,7 +111,7 @@ tests = (
 )
 testData = testData + ((c, ((tests, {}),)),)
 
-c = Tkinter.Label
+c = tkinter.Label
 tests = (
   (c.pack, ()),
   (Test.num_options, (), 25),
@@ -122,7 +122,7 @@ tests = (
 )
 testData = testData + ((c, ((tests, {}),)),)
 
-c = Tkinter.Listbox
+c = tkinter.Listbox
 tests = (
   (c.pack, ()),
   (Test.num_options, (), 23),
@@ -142,7 +142,7 @@ tests = (
 )
 testData = testData + ((c, ((tests, {}),)),)
 
-c = Tkinter.Menu
+c = tkinter.Menu
 tests = (
   (Test.num_options, (), menu_num),
   ('background', 'lightsteelblue1'),
@@ -169,7 +169,7 @@ tests = (
 )
 testData = testData + ((c, ((tests, {}),)),)
 
-c = Tkinter.Menubutton
+c = tkinter.Menubutton
 tests = (
   (c.pack, ()),
   (Test.num_options, (), menubutton_num),
@@ -179,7 +179,7 @@ tests = (
 )
 testData = testData + ((c, ((tests, {}),)),)
 
-c = Tkinter.Message
+c = tkinter.Message
 tests = (
   (c.pack, ()),
   (Test.num_options, (), 21),
@@ -194,7 +194,7 @@ tests = (
 )
 testData = testData + ((c, ((tests, {}),)),)
 
-c = Tkinter.Radiobutton
+c = tkinter.Radiobutton
 tests = (
   (c.pack, ()),
   (Test.num_options, (), 35),
@@ -214,7 +214,7 @@ tests = (
 )
 testData = testData + ((c, ((tests, {}),)),)
 
-c = Tkinter.Scale
+c = tkinter.Scale
 tests = (
   (c.pack, ()),
   (Test.num_options, (), 33),
@@ -232,7 +232,7 @@ tests = (
 )
 testData = testData + ((c, ((tests, {}),)),)
 
-c = Tkinter.Scrollbar
+c = tkinter.Scrollbar
 tests = (
   (c.pack, (), {'fill': 'x'}),
   (Test.num_options, (), 20),
@@ -249,7 +249,7 @@ tests = (
 )
 testData = testData + ((c, ((tests, {}),)),)
 
-c = Tkinter.Text
+c = tkinter.Text
 tests = (
   (c.pack, ()),
   (Test.num_options, (), 35),
@@ -304,14 +304,14 @@ testData = testData + ((c, ((tests, {}),)),)
 
 def _makeGridButtons():
   w = Test.currentWidget()
-  b1 = Tkinter.Button(w, text = 'Button 1')
-  b2 = Tkinter.Button(w, text = 'Button 2')
-  b3 = Tkinter.Button(w, text = 'Button 3')
-  b4 = Tkinter.Button(w, text = 'Button 4')
-  b5 = Tkinter.Button(w, text = 'Button 5')
-  b6 = Tkinter.Button(w, text = 'Button 6')
-  b7 = Tkinter.Button(w, text = 'Button 7')
-  b8 = Tkinter.Button(w, text = 'Button 8')
+  b1 = tkinter.Button(w, text = 'Button 1')
+  b2 = tkinter.Button(w, text = 'Button 2')
+  b3 = tkinter.Button(w, text = 'Button 3')
+  b4 = tkinter.Button(w, text = 'Button 4')
+  b5 = tkinter.Button(w, text = 'Button 5')
+  b6 = tkinter.Button(w, text = 'Button 6')
+  b7 = tkinter.Button(w, text = 'Button 7')
+  b8 = tkinter.Button(w, text = 'Button 8')
 
   b1.grid(column=0, row=0)
   b2.grid(column=1, row=0)
@@ -332,7 +332,7 @@ def _checkGridInfo():
   info = b8.grid_info()
   if info['in'] == w:
     rtn = {}
-    for key, value in info.items():
+    for key, value in list(info.items()):
       if key != 'in':
         rtn[key] = value
     return rtn
@@ -346,7 +346,7 @@ def _checkGridForget():
 
 # The -pad grid option was added in Tk 4.2.
 # Could not do columnconfigure(0) before Tk 4.2.
-if Tkinter.TkVersion >= 4.2:
+if tkinter.TkVersion >= 4.2:
   padTest = {'pad': 25}
   colTest = {'minsize': 100, 'pad': 25, 'weight': 1}
   rowTest = {'minsize': 100, 'pad': 0, 'weight': 1}
@@ -355,7 +355,7 @@ else:
   colTest = 'TclError: wrong # args: should be "grid columnconfigure master index ?-option value...?"'
   rowTest = 'TclError: wrong # args: should be "grid rowconfigure master index ?-option value...?"'
 
-c = Tkinter.Frame
+c = tkinter.Frame
 tests = (
   (c.pack, (), {'fill': 'both', 'expand': 1}),
   (_makeGridButtons, ()),

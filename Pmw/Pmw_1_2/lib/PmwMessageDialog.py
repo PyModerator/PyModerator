@@ -1,6 +1,6 @@
 # Based on iwidgets2.2.0/messagedialog.itk code.
 
-import Tkinter
+import tkinter
 import Pmw
 
 class MessageDialog(Pmw.Dialog):
@@ -24,7 +24,7 @@ class MessageDialog(Pmw.Dialog):
 
 	self._message = self.createcomponent('message',
 		(), None,
-		Tkinter.Label, (interior,))
+		tkinter.Label, (interior,))
 
         iconpos = self['iconpos']
 	iconmargin = self['iconmargin']
@@ -37,11 +37,10 @@ class MessageDialog(Pmw.Dialog):
 	else:
 	    self._icon = self.createcomponent('icon',
 		    (), None,
-		    Tkinter.Label, (interior,))
+		    tkinter.Label, (interior,))
 	    if iconpos not in 'nsew':
-		raise ValueError, \
-		    'bad iconpos option "%s":  should be n, s, e, or w' \
-			% iconpos
+		raise ValueError('bad iconpos option "%s":  should be n, s, e, or w' \
+			% iconpos)
 
 	    if iconpos in 'nw':
 		icon = 1

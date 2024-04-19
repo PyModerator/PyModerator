@@ -1,7 +1,7 @@
 # Based on iwidgets2.2.0/scrolledlistbox.itk code.
 
 import types
-import Tkinter
+import tkinter
 import Pmw
 
 class ScrolledListBox(Pmw.MegaWidget):
@@ -36,7 +36,7 @@ class ScrolledListBox(Pmw.MegaWidget):
 	# Create the listbox widget.
 	self._listbox = self.createcomponent('listbox',
 		(), None,
-		Tkinter.Listbox, (interior,))
+		tkinter.Listbox, (interior,))
 	self._listbox.grid(row = 2, column = 2, sticky = 'news')
 	interior.grid_rowconfigure(2, weight = 1, minsize = 0)
 	interior.grid_columnconfigure(2, weight = 1, minsize = 0)
@@ -44,7 +44,7 @@ class ScrolledListBox(Pmw.MegaWidget):
 	# Create the horizontal scrollbar
 	self._horizScrollbar = self.createcomponent('horizscrollbar',
 		(), 'Scrollbar',
-		Tkinter.Scrollbar, (interior,),
+		tkinter.Scrollbar, (interior,),
 	        orient='horizontal',
 		command=self._listbox.xview
 	)
@@ -52,7 +52,7 @@ class ScrolledListBox(Pmw.MegaWidget):
 	# Create the vertical scrollbar
 	self._vertScrollbar = self.createcomponent('vertscrollbar',
 		(), 'Scrollbar',
-		Tkinter.Scrollbar, (interior,),
+		tkinter.Scrollbar, (interior,),
 		orient='vertical',
 		command=self._listbox.yview
 	)
@@ -61,10 +61,10 @@ class ScrolledListBox(Pmw.MegaWidget):
 
 	# Add the items specified by the initialisation option.
 	items = self['items']
-	if type(items) != types.TupleType:
+	if type(items) != tuple:
 	    items = tuple(items)
 	if len(items) > 0:
-	    apply(self._listbox.insert, ('end',) + items)
+	    self._listbox.insert(*('end',) + items)
 
 	_registerScrolledList(self._listbox, self)
 
@@ -75,8 +75,8 @@ class ScrolledListBox(Pmw.MegaWidget):
         # bind_class rather than a reference to self, which would
         # prevent object cleanup.
         theTag = 'ScrolledListBoxTag'
-        if ScrolledListBox._classBindingsDefinedFor != Tkinter._default_root:
-            root  = Tkinter._default_root
+        if ScrolledListBox._classBindingsDefinedFor != tkinter._default_root:
+            root  = tkinter._default_root
 	    	    
             def doubleEvent(event):
                 _handleEvent(event, 'double')
@@ -135,24 +135,24 @@ class ScrolledListBox(Pmw.MegaWidget):
     def setvalue(self, textOrList):
         self._listbox.selection_clear(0, 'end')
         listitems = list(self._listbox.get(0, 'end'))
-        if type(textOrList) == types.StringType:
+        if type(textOrList) == bytes:
             if textOrList in listitems:
                 self._listbox.selection_set(listitems.index(textOrList))
             else:
-                raise ValueError, 'no such item "%s"' % textOrList
+                raise ValueError('no such item "%s"' % textOrList)
         else:
             for item in textOrList:
                 if item in listitems:
                     self._listbox.selection_set(listitems.index(item))
                 else:
-                    raise ValueError, 'no such item "%s"' % item
+                    raise ValueError('no such item "%s"' % item)
 
     def setlist(self, items):
         self._listbox.delete(0, 'end')
 	if len(items) > 0:
-	    if type(items) != types.TupleType:
+	    if type(items) != tuple:
 		items = tuple(items)
-	    apply(self._listbox.insert, (0,) + items)
+	    self._listbox.insert(*(0,) + items)
 
     # Override Tkinter.Listbox get method, so that if it is called with
     # no arguments, return all list elements (consistent with other widgets).
@@ -182,7 +182,7 @@ class ScrolledListBox(Pmw.MegaWidget):
 		self._toggleHorizScrollbar()
 	else:
 	    message = 'bad hscrollmode option "%s": should be static, dynamic, or none' % mode
-	    raise ValueError, message
+	    raise ValueError(message)
 
         self._configureScrollCommands()
 
@@ -202,7 +202,7 @@ class ScrolledListBox(Pmw.MegaWidget):
 		self._toggleVertScrollbar()
 	else:
 	    message = 'bad vscrollmode option "%s": should be static, dynamic, or none' % mode
-	    raise ValueError, message
+	    raise ValueError(message)
 
         self._configureScrollCommands()
 
@@ -352,7 +352,7 @@ class ScrolledListBox(Pmw.MegaWidget):
     def bbox(self, index):
 	return self._listbox.bbox(index)
 
-Pmw.forwardmethods(ScrolledListBox, Tkinter.Listbox, '_listbox')
+Pmw.forwardmethods(ScrolledListBox, tkinter.Listbox, '_listbox')
 
 # ======================================================================
 
@@ -372,5 +372,5 @@ def _handleEvent(event, eventType):
 
     # A binding earlier in the bindtags list may have destroyed the
     # megawidget, so need to check.
-    if _listboxCache.has_key(event.widget):
+    if event.widget in _listboxCache:
         _listboxCache[event.widget]._handleEvent(event, eventType)

@@ -10,15 +10,15 @@ import sys
 import time
 import socket
 import AppShell
-import cPickle
+import pickle
 import Pmw
-import tkMessageBox
-import tkSimpleDialog
+import tkinter.messagebox
+import tkinter.simpledialog
 import altDialog
 import cliVar
-import cStringIO
+import io
 import string
-from Tkinter import *
+from tkinter import *
 from clientInterfaces import *
 from clientLogin import *
 from clientNewsGroup import *
@@ -58,13 +58,13 @@ class PyModeratorClient(AppShell.AppShell):
 
     def ReadCache(self):
         self.dataFile.seek(0)
-        self.cache = cPickle.load(self.dataFile)
+        self.cache = pickle.load(self.dataFile)
         if not hasattr(self.cache, "ballonState"):
             self.cache.ballonState = "both"
 
     def WriteCache(self):
         self.dataFile.seek(0)
-        cPickle.dump(self.cache, self.dataFile, 1)
+        pickle.dump(self.cache, self.dataFile, 1)
         self.dataFile.flush()
 
     def appInit(self):
@@ -228,7 +228,7 @@ class PyModeratorClient(AppShell.AppShell):
                     width = 14).pack(side = LEFT, padx = 2, pady = 2)
 
     def ConfirmValidGroupsUpdate(self):
-        button = tkMessageBox.askquestion("Confirm Update Request",
+        button = tkinter.messagebox.askquestion("Confirm Update Request",
                 "Updating the list of all possible newsgroups will\n"
                 "take many minutes. Are you sure you want to do this?",
                 default = "no")
@@ -389,18 +389,18 @@ def ShowStatistics():
     if cliVar.currentNewsGroup:
         stats = cliVar.currentNewsGroup.ro.statistics
         colNames = stats[""][:] + ["Totals"]
-        colWidths = map(len, colNames)
+        colWidths = list(map(len, colNames))
         numCols = len(colNames)
-        modNames = stats.keys()
-        modWidth = max(map(len, modNames + ["Totals"])) + 1
+        modNames = list(stats.keys())
+        modWidth = max(list(map(len, modNames + ["Totals"]))) + 1
         hdr = modWidth*" " + string.join(colNames, " ") + "\n"
         dmsg = hdr
-        rows = stats.items()
+        rows = list(stats.items())
         rows.sort()
         colTotals = numCols*[0]
         for modID, columns in rows:
             columns = columns[:] + [0]
-            if modID <> "":
+            if modID != "":
                 dmsg = "%s%-*s" % (dmsg, modWidth, modID)
                 for jdx in range(numCols - 1):
                     columns[-1] = columns[-1] + columns[jdx]
@@ -422,7 +422,7 @@ def DeleteMessage():
     if msg and cliVar.currentNewsGroup:
         moderator = cliVar.thisModerator
         msgID = msg.ro.messageID
-        if not tkMessageBox.askokcancel("Confirm Deletion",
+        if not tkinter.messagebox.askokcancel("Confirm Deletion",
                                         "Delete message %d?" % msgID):
             return
         MessageDelete(msgID)
@@ -434,7 +434,7 @@ def RefreshAll():
         ModerateNewsGroup(None)
 
 def ModerateNewsGroup(newsGroupID):
-    if cliVar.sockFile <> None:
+    if cliVar.sockFile != None:
         cliVar.svr = ServerGet()
     if not newsGroupID or newsGroupID == "none":
         newsGroupID = ""
@@ -464,7 +464,7 @@ def DoApprove():
         msgID = msg.ro.messageID
         if msg.ro.status in ["Rejected", "Approved"]:
             return Oops("Message '%d' already processed." % msgID)
-        if not tkMessageBox.askokcancel("Confirm Approval",
+        if not tkinter.messagebox.askokcancel("Confirm Approval",
                                         "Approve message %d?" % msgID):
             return
         outHeaders = msg.ro.outHeaders
@@ -480,7 +480,7 @@ def DoApprove():
             try:
                 PostMessage(outHeaders, outTxt, usr.nntpHost, usr.nntpPort,
                             usr.nntpUser, usr.nntpPassword)
-            except CmdError, err:
+            except CmdError as err:
                 return Oops(err)
         MessageApprove(msgID, outTxt, outHeaders, "")
         cliVar.currentNewsGroup = NewsGroupGet(cliVar.currentNewsGroupID)
@@ -489,7 +489,7 @@ def DoApprove():
 def HandleLimboDetail(button):
     app = cliVar.app
     app.eventDetail.withdraw()
-    if button <> "OK":
+    if button != "OK":
         return
     msg = app.messageView.GetMessage()
     if msg and cliVar.currentNewsGroup:
@@ -512,7 +512,7 @@ def DoReassign():
     msg = app.messageView.GetMessage()
     if msg and cliVar.currentNewsGroup:
         msgID = msg.ro.messageID
-        moderatorIDs = cliVar.svr.ro.moderators.keys()
+        moderatorIDs = list(cliVar.svr.ro.moderators.keys())
         moderatorIDs.sort()
         app.selectReassign.component("scrolledlist").setlist(moderatorIDs)
         app.selectReassign.show()
@@ -526,7 +526,7 @@ def HandleReassignment(buttonKey):
     if msg and cliVar.currentNewsGroup:
         msgID = msg.ro.messageID
         sels = app.selectReassign.getcurselection()
-        if len(sels) <> 0:
+        if len(sels) != 0:
             MessageReassign(msgID, sels[0])
             cliVar.currentNewsGroup = NewsGroupGet(cliVar.currentNewsGroupID)
             app.messageLists.UpdateView()
@@ -534,7 +534,7 @@ def HandleReassignment(buttonKey):
 def HandleEventNote(button):
     app = cliVar.app
     app.eventDetail.withdraw()
-    if button <> "OK":
+    if button != "OK":
         return
     msg = app.messageView.GetMessage()
     if msg and cliVar.currentNewsGroup:
@@ -560,7 +560,7 @@ def DoEmailPoster():
     if msg and cliVar.currentNewsGroup:
         msgID = msg.ro.messageID
         detail = SendEMailReply(msg, "")
-        if detail <> None:
+        if detail != None:
             eventRW = EventRWData("Email", detail)
             MessageAddEvent(msgID, eventRW)
             cliVar.currentNewsGroup = NewsGroupGet(cliVar.currentNewsGroupID)

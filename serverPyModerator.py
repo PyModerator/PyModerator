@@ -10,8 +10,8 @@
 import sys
 import socket
 import string
-import cPickle
-import cStringIO
+import pickle
+import io
 import traceback
 import serVar
 import nntplib
@@ -31,16 +31,16 @@ def AddCmd(func):
 def CurrentNewsgroup(modContext):
     app = serVar.app
     newsGroupID = modContext[0].ro.currentNewsGroupID
-    if not newsGroupID or not app.newsGroupFiles.has_key(newsGroupID):
+    if not newsGroupID or newsGroupID not in app.newsGroupFiles:
         raise CmdError("Current newsgroup is not set to valid value.")
     return app.newsGroupFiles[newsGroupID]
 
 #------------------------------------------------------------------------------
 def ServerLogin(moderatorID, password, modContext):
-    print "Login", moderatorID
+    print("Login", moderatorID)
     app = serVar.app
     moderator = app.ro.moderators.get(moderatorID)
-    if moderator <> None:
+    if moderator != None:
         if moderator.ro.loggedIn:
             raise CmdError("Already logged in.")
         if app.cryptedPasswords[moderatorID] == Crypt(password):
@@ -66,9 +66,9 @@ def ServerLogout(modContext):
         moderator.ro.lastLogout = TimeNow()
         moderator.ro.loggedIn = 0
         moderatorID = moderator.ro.moderatorID
-        print "Logout", moderatorID
+        print("Logout", moderatorID)
         lockedMessages = serVar.app.lockedMessages
-        for messageID, modID in lockedMessages.items():
+        for messageID, modID in list(lockedMessages.items()):
             if modID == moderatorID:
                 del lockedMessages[messageID]
         serVar.app.Write()
@@ -76,7 +76,7 @@ AddCmd(ServerLogout)
 
 def ServerUpdate(serverRW, modContext):
     app = serVar.app
-    if modContext[0].ro.userType <> "Superuser":
+    if modContext[0].ro.userType != "Superuser":
         raise CmdError("Must be superuser to update values.")
     app.rw = serverRW
     app.Write()
@@ -89,7 +89,7 @@ AddCmd(ServerGet)
 
 def ServerUpdateValidGroups(modContext):
     app = serVar.app
-    if modContext[0].ro.userType <> "Superuser":
+    if modContext[0].ro.userType != "Superuser":
         raise CmdError("Must be superuser to update valid group list.")
     rw = app.rw
     if rw.nntpUser:
@@ -113,7 +113,7 @@ def GetModerator(moderatorID):
 
 def ModeratorCreate(moderatorID, password, moderatorRW, modContext):
     app = serVar.app
-    if modContext[0].ro.userType <> "Superuser":
+    if modContext[0].ro.userType != "Superuser":
         raise CmdError("Only a superuser may create a moderator.")
     app.NewModerator(password, ModeratorData(moderatorID, moderatorRW))
     app.Write()
@@ -121,7 +121,7 @@ AddCmd(ModeratorCreate)
 
 def ModeratorList(modContext):
     app = serVar.app
-    lst = app.ro.moderators.keys()
+    lst = list(app.ro.moderators.keys())
     lst.sort()
     return lst
 AddCmd(ModeratorList)
@@ -133,8 +133,8 @@ AddCmd(ModeratorGet)
 def ModeratorUpdate(moderatorID, moderatorRW, modContext):
     app = serVar.app
     moderator = GetModerator(moderatorID)
-    if modContext[0].ro.userType <> "Superuser":
-        if modContext[0].ro.moderatorID <> moderatorID:
+    if modContext[0].ro.userType != "Superuser":
+        if modContext[0].ro.moderatorID != moderatorID:
             raise CmdError("Only superusers may modify other users.")
     moderator.rw = moderatorRW
     app.Write()
@@ -143,10 +143,10 @@ AddCmd(ModeratorUpdate)
 def ModeratorChangePW(moderatorID, newPW, modContext):
     app = serVar.app
     moderator = GetModerator(moderatorID)
-    if modContext[0].ro.userType <> "Superuser":
-        if modContext[0].ro.moderatorID <> moderatorID:
+    if modContext[0].ro.userType != "Superuser":
+        if modContext[0].ro.moderatorID != moderatorID:
             raise CmdError("Only superusers may modify other user's passwords.")
-    if moderatorID == "root" and modContext[0].ro.moderatorID <> moderatorID:
+    if moderatorID == "root" and modContext[0].ro.moderatorID != moderatorID:
         raise CmdError("Only root may change root's password.")
     app.cryptedPasswords[moderatorID] = Crypt(newPW)
     app.Write()
@@ -155,7 +155,7 @@ AddCmd(ModeratorChangePW)
 def ModeratorChangeType(moderatorID, userType, modContext):
     app = serVar.app
     moderator = GetModerator(moderatorID)
-    if modContext[0].ro.moderatorID <> "root":
+    if modContext[0].ro.moderatorID != "root":
         raise CmdError("Only root may change a user's type.")
     if moderatorID == "root":
         raise CmdError("Root's user type may not be changed.")
@@ -166,8 +166,8 @@ AddCmd(ModeratorChangeType)
 def ModeratorDelete(moderatorID, modContext):
     app = serVar.app
     GetModerator(moderatorID)
-    if modContext[0].ro.userType <> "Superuser":
-        if modContext[0].ro.moderatorID <> moderatorID:
+    if modContext[0].ro.userType != "Superuser":
+        if modContext[0].ro.moderatorID != moderatorID:
             raise CmdError("Only superusers may delete other users.")
     app.DelModerator(moderatorID)
     app.Write()
@@ -184,7 +184,7 @@ def GetNewsGroup(newsGroupID):
 def NewsGroupCreate(newsGroupID, newsGroupRW, modContext):
     app = serVar.app
     moderatorID = modContext[0].ro.moderatorID
-    if modContext[0].ro.userType <> "Superuser":
+    if modContext[0].ro.userType != "Superuser":
         raise CmdError("Only superusers may create a newsgroup.")
     app.NewNewsGroup(NewsGroupData(newsGroupID, moderatorID, newsGroupRW))
     app.Write()
@@ -204,7 +204,7 @@ def NewsGroupUpdate(newsGroupID, newsGroupRW, modContext):
     app = serVar.app
     newsGroupFile = GetNewsGroup(newsGroupID)
     newsGroup = newsGroupFile.newsGroupData
-    if modContext[0].ro.userType <> "Superuser":
+    if modContext[0].ro.userType != "Superuser":
         raise CmdError("Only superusers may modify newsgroups.")
     newsGroup.rw = newsGroupRW
     serVar.updateSchedule = 1
@@ -214,7 +214,7 @@ AddCmd(NewsGroupUpdate)
 
 def NewsGroupDelete(newsGroupID, modContext):
     app = serVar.app
-    if modContext[0].ro.userType <> "Superuser":
+    if modContext[0].ro.userType != "Superuser":
         raise CmdError("Only superusers may delete a newsgroup.")
     app.DelNewsGroup(newsGroupID)
     app.Write()
@@ -237,9 +237,9 @@ def NewsGroupModerators(newsGroupID, moderatorIDs, modContext):
     oldModeratorIDs.sort()
     if newModeratorIDs == oldModeratorIDs:
         return  # No change requested.
-    if modContext[0].ro.userType <> "Superuser":
+    if modContext[0].ro.userType != "Superuser":
         raise CmdError("Only superusers may change newsgroup moderators.")
-    for moderatorID in app.ro.moderators.keys():
+    for moderatorID in list(app.ro.moderators.keys()):
         if moderatorID in oldModeratorIDs:
             if moderatorID not in newModeratorIDs:
                 app.DelModeratorFromNewsGroup(moderatorID, newsGroupID)
@@ -251,7 +251,7 @@ AddCmd(NewsGroupModerators)
 
 def AddModeratorToNewsGroup(moderatorID, newsGroupID, modContext):
     app = serVar.app
-    if modContext[0].ro.userType <> "Superuser":
+    if modContext[0].ro.userType != "Superuser":
         raise CmdError("Only superusers may add moderators to newsgroups.")
     app.AddModeratorToNewsGroup(moderatorID, newsGroupID)
     app.Write()
@@ -259,7 +259,7 @@ AddCmd(AddModeratorToNewsGroup)
 
 def DelModeratorFromNewsGroup(moderatorID, newsGroupID, modContext):
     app = serVar.app
-    if modContext[0].ro.userType <> "Superuser":
+    if modContext[0].ro.userType != "Superuser":
         raise CmdError("Only superusers may delete moderators from newsgroups.")
     app.DelModeratorFromNewsGroup(moderatorID, newsGroupID)
     app.Write()
@@ -281,7 +281,7 @@ def RejectionCreate(rejectionID, rejectionRW, modContext):
         raise CmdError("Guests may not create new rejection types.")
     newsGroupFile = CurrentNewsgroup(modContext)
     newsGroup = newsGroupFile.newsGroupData
-    if newsGroup.ro.rejections.has_key(rejectionID):
+    if rejectionID in newsGroup.ro.rejections:
         raise CmdError("Rejection ID '%s' already exists." % rejectionID)
     if not rejectionID:
         raise CmdError("Blank rejection ID is not allowed.")
@@ -295,7 +295,7 @@ AddCmd(RejectionCreate)
 def RejectionList(modContext):
     app = serVar.app
     newsGroup = CurrentNewsgroup(modContext).newsGroupData
-    lst = newsGroup.rejections.keys()
+    lst = list(newsGroup.rejections.keys())
     lst.sort()
     return lst
 AddCmd(RejectionList)
@@ -308,8 +308,8 @@ AddCmd(RejectionGet)
 def RejectionUpdate(rejectionID, rejectionRW, modContext):
     app = serVar.app
     rejection, newsGroupFile, newsGroup = GetRejection(rejectionID, modContext)
-    if modContext[0].ro.userType <> "Superuser":
-        if modContext[0].ro.moderatorID <> rejection.ro.creatorModeratorID:
+    if modContext[0].ro.userType != "Superuser":
+        if modContext[0].ro.moderatorID != rejection.ro.creatorModeratorID:
             raise CmdError("Only owners or superusers may modify rejections.")
     rejection.rw = rejectionRW
     newsGroupFile.WriteData()
@@ -319,8 +319,8 @@ AddCmd(RejectionUpdate)
 def RejectionDelete(rejectionID, modContext):
     app = serVar.app
     rejection, newsGroupFile, newsGroup = GetRejection(rejectionID, modContext)
-    if modContext[0].ro.userType <> "Superuser":
-        if modContext[0].ro.moderatorID <> rejection.ro.creatorModeratorID:
+    if modContext[0].ro.userType != "Superuser":
+        if modContext[0].ro.moderatorID != rejection.ro.creatorModeratorID:
             raise CmdError("Only owners or superusers may delete rejections.")
     del newsGroup.ro.rejections[rejectionID]
     newsGroupFile.WriteData()
@@ -421,7 +421,7 @@ def MessageLock(messageID, modContext):
     moderatorID = modContext[0].ro.moderatorID
     message = newsGroupFile.ReadMessage(messageID)
     lockedBy = app.lockedMessages.get(messageID)
-    if lockedBy and lockedBy <> moderatorID:
+    if lockedBy and lockedBy != moderatorID:
         return "Warning: message locked by %s. " % (lockedBy)
     # This clears all of the moderator's locks. Assumes moderators may only
     # lock one message at a time. This may be changed in the future.
@@ -436,7 +436,7 @@ def MessageUnLock(messageID, modContext):
         return None
     moderatorID =  modContext[0].ro.moderatorID
     if messageID == None:
-        messageIDs = app.lockedMessages.keys()
+        messageIDs = list(app.lockedMessages.keys())
     else:
         if not app.lockedMessages.get(messageID):
             return None
@@ -454,11 +454,11 @@ def MessageReassign(messageID, assignTo, modContext):
     newsGroupFile = CurrentNewsgroup(modContext)
     newsGroupData = newsGroupFile.newsGroupData
     message = newsGroupFile.ReadMessage(messageID)
-    if assignTo <> "root" and assignTo not in newsGroupData.ro.moderatorIDs:
+    if assignTo != "root" and assignTo not in newsGroupData.ro.moderatorIDs:
         raise CmdError("No such moderator '%s' for this newsgroup." % assignTo)
     moderatorID = modContext[0].ro.moderatorID
     lockedBy = app.lockedMessages.get(messageID)
-    if lockedBy and lockedBy <> moderatorID:
+    if lockedBy and lockedBy != moderatorID:
         return CmdError("Error: message %d locked by %s." %
                         (messageID, lockedBy))
     message.ro.assignedTo = assignTo
@@ -487,7 +487,7 @@ def MessageApprove(messageID, outTxt, outHeaders, details, modContext):
     newsGroupFile = CurrentNewsgroup(modContext)
     moderatorID = modContext[0].ro.moderatorID
     lockedBy = app.lockedMessages.get(messageID)
-    if lockedBy and lockedBy <> moderatorID:
+    if lockedBy and lockedBy != moderatorID:
         return CmdError("Error: message %d locked by %s." %
                         (messageID, lockedBy))
     newsGroupFile.ProcessMessage(messageID, outTxt, outHeaders,
@@ -508,14 +508,14 @@ def MessageReject(messageID, rejectID, details, modContext):
     newsGroupFile = CurrentNewsgroup(modContext)
     moderatorID = modContext[0].ro.moderatorID
     lockedBy = app.lockedMessages.get(messageID)
-    if lockedBy and lockedBy <> moderatorID:
+    if lockedBy and lockedBy != moderatorID:
         return CmdError("Error: message %d locked by %s." %
                         (messageID, lockedBy))
     newsGroupFile.ProcessMessage(messageID, "", { },
                                 rejectID, details, moderatorID)
     stats = newsGroupFile.newsGroupData.ro.statistics
     if rejectID not in stats[""]:
-        for k, v in stats.items():
+        for k, v in list(stats.items()):
             if k == "":
                 v.append(rejectID)
             else:
@@ -530,30 +530,30 @@ def MessageReject(messageID, rejectID, details, modContext):
 AddCmd(MessageReject)
 
 def MessageCancel(messageID, modContext):
-    if modContext[0].ro.userType <> "Superuser":
+    if modContext[0].ro.userType != "Superuser":
         raise CmdError("Only superusers may cancel a message.")
     raise CmdError("Usenet message cancelling not yet implemented.")
 AddCmd(MessageCancel)
 
 def MessageDelete(messageID, modContext):
     app = serVar.app
-    if modContext[0].ro.userType <> "Superuser":
+    if modContext[0].ro.userType != "Superuser":
         raise CmdError("Only superusers may delete a message.")
     newsGroupFile = CurrentNewsgroup(modContext)
     message = newsGroupFile.ReadMessage(messageID)
-    if message.ro.status <> "Rejected":
+    if message.ro.status != "Rejected":
         raise CmdError("May only delete rejected messages.")
     newsGroupFile.DeleteMessageFile(messageID)
 AddCmd(MessageDelete)
 
 #------------------------------------------------------------------------------
 def DoCommand(cmd, args, modContext):
-    if cmd <> "ServerLogin" and modContext[0] == None:
+    if cmd != "ServerLogin" and modContext[0] == None:
         raise CmdError("Not logged in.")
-    if validCmds.has_key(cmd):
+    if cmd in validCmds:
         try:
             args.append(modContext)
-            return apply(validCmds[cmd], args)
+            return validCmds[cmd](*args)
         except CmdError:
             raise
         except:
@@ -579,7 +579,7 @@ class AcceptHandler(asyncore.dispatcher):
 #------------------------------------------------------------------------------
 class ClientHandler(asyncore.dispatcher):
     def __init__(self, sock, remAddr):
-        print "ClientHandler ", remAddr
+        print("ClientHandler ", remAddr)
         asyncore.dispatcher.__init__(self, sock)
         self.remAddr = remAddr
         self.inBuffer = ""
@@ -587,7 +587,7 @@ class ClientHandler(asyncore.dispatcher):
         self.inLenNeeded = 4
         self.modContext = [ None ]
         self.funcState = self.ExtractCmdLen
-        self.cmdFile = cStringIO.StringIO()
+        self.cmdFile = io.StringIO()
         self.idleTimeout = TimeNow() + serVar.app.rw.idleTimeLogout
 
     def handle_read(self):
@@ -614,23 +614,23 @@ class ClientHandler(asyncore.dispatcher):
             cmd = self.cmdFile.readline()
             cmd = cmd[:-1]  # Trim newline
             #print "Cmd: %s" % cmd
-            args = cPickle.load(self.cmdFile)
+            args = pickle.load(self.cmdFile)
             #print "Args: %s" % args
             try:
                 rsp = DoCommand(cmd, args, self.modContext)
             except CmdError:
-                rsp = sys.exc_value
+                rsp = sys.exc_info()[1]
             #print "rsp=", rsp
-            rspFile = cStringIO.StringIO()
-            cPickle.dump(rsp, rspFile, 1)
+            rspFile = io.StringIO()
+            pickle.dump(rsp, rspFile, 1)
             buf = rspFile.getvalue()
             self.outBuffer = struct.pack(">l", len(buf)) + buf
             self.inLenNeeded = 4
             return self.ExtractCmdLen
         except:
-            print "Something wrong in ExtractAndDoCmd:"
-            print sys.exc_info()[0]
-            print sys.exc_info()[1]
+            print("Something wrong in ExtractAndDoCmd:")
+            print(sys.exc_info()[0])
+            print(sys.exc_info()[1])
             traceback.print_tb(sys.exc_info()[2])
             self.handle_close()
 
@@ -650,7 +650,7 @@ class ClientHandler(asyncore.dispatcher):
         # Do logout timestamp update and flag off.
         ServerLogout(self.modContext)
         self.close()
-        print "Close ", self.remAddr
+        print("Close ", self.remAddr)
 
 #------------------------------------------------------------------------------
 def PeriodicPost(newsGroupID, messageID):
@@ -676,7 +676,7 @@ def PeriodicPost(newsGroupID, messageID):
                         PostMessage(msg.ro.outHeaders, msg.ro.outTxt,
                             rw.nntpHost, rw.nntpPort, rw.nntpUser,
                             rw.nntpPassword)
-                    except CmdError, errVal:
+                    except CmdError as errVal:
                         eventRW.eventDetail = errVal.details
                 else:
                     toAddr = string.replace(newsGroupID, ".", "-") + \
@@ -705,14 +705,14 @@ def Main():
             serVar.updateSchedule = 0
             schedule = [ ]
             # Scan channels for activity to update idle times.
-            for dispatcher in asyncore.socket_map.keys():
+            for dispatcher in list(asyncore.socket_map.keys()):
                 if isinstance(dispatcher, ClientHandler):
                     schedule.append([dispatcher.idleTimeout, IdleTimeout,
                                         (dispatcher,)])
             # Scan newsgroups and insert entries for scheduled messages.
-            for grpID, newsGroupFile in serVar.app.newsGroupFiles.items():
+            for grpID, newsGroupFile in list(serVar.app.newsGroupFiles.items()):
                 groupRW = newsGroupFile.newsGroupData.rw
-                for msgID, [evtTime, rptTime] in groupRW.periodicPosts.items():
+                for msgID, [evtTime, rptTime] in list(groupRW.periodicPosts.items()):
                     schedule.append([evtTime, PeriodicPost, (grpID, msgID)])
             schedule.sort()
         if schedule:
@@ -727,10 +727,10 @@ def Main():
             t, f, a = schedule[0]
             schedule = schedule[1:]
             try:
-                apply(f, a)
+                f(*a)
             except:
-                print "Something wrong in Scheduled function:"
-                print sys.exc_info()[0]
-                print sys.exc_info()[1]
+                print("Something wrong in Scheduled function:")
+                print(sys.exc_info()[0])
+                print(sys.exc_info()[1])
                 traceback.print_tb(sys.exc_info()[2])
 

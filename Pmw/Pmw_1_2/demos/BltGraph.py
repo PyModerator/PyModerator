@@ -5,7 +5,7 @@ import sys
 sys.path[:0] = ['../../..']
 
 import string
-import Tkinter
+import tkinter
 import Pmw
 
 # Simple random number generator.
@@ -49,7 +49,7 @@ class GraphDemo(Pmw.MegaToplevel):
 
 	interior = self.interior()
 
-        controlFrame = Tkinter.Frame(interior)
+        controlFrame = tkinter.Frame(interior)
 	controlFrame.pack(side = 'bottom', fill = 'x', expand = 0)
 
         # Create an option menu for the kind of elements to create.
@@ -103,12 +103,12 @@ class GraphDemo(Pmw.MegaToplevel):
 	bufferelements.pack(side = 'left')
 
 	# Create a button to add a point to the vector.
-	addpoint = Tkinter.Button(controlFrame, text = 'Add point', 
+	addpoint = tkinter.Button(controlFrame, text = 'Add point', 
 		command = Pmw.busycallback(self._addpoint))
 	addpoint.pack(side = 'left', fill = 'x', expand = 0)
 
 	# Create a button to close the window
-	close = Tkinter.Button(controlFrame, text = 'Close', 
+	close = tkinter.Button(controlFrame, text = 'Close', 
 		command = Pmw.busycallback(self.destroy))
 	close.pack(side = 'left', fill = 'x', expand = 0)
 
@@ -129,7 +129,7 @@ class GraphDemo(Pmw.MegaToplevel):
 
     def _setelementtype(self, type):
         elements = self._graph.element_names()
-	apply(self._graph.element_delete, elements)
+	self._graph.element_delete(*elements)
 
         if type == 'none':
             return
@@ -197,7 +197,7 @@ class Demo:
 	    message = 'Sorry\nThe BLT package has not been\n' + \
 		    'installed on this system.\n' + \
 		    'Please install it and try again.'
-	    w = Tkinter.Label(parent, text = message)
+	    w = tkinter.Label(parent, text = message)
 	    w.pack(padx = 8, pady = 8)
 	    return
 
@@ -205,7 +205,7 @@ class Demo:
 		'BLT graph widget.\n' + \
 		'Select the number of points to display and\n' + \
 		'click on the button to display the graph.'
-	w = Tkinter.Label(parent, text = message)
+	w = tkinter.Label(parent, text = message)
 	w.pack(padx = 8, pady = 8)
 
 	# Create combobox to select number of points to display.
@@ -215,7 +215,7 @@ class Demo:
 	self.combo.pack(padx = 8, pady = 8)
 
 	# Create button to start blt graph.
-	start = Tkinter.Button(parent,
+	start = tkinter.Button(parent,
 		text = 'Show BLT graph',
 	        command = Pmw.busycallback(self.showGraphDemo))
 	start.pack(padx = 8, pady = 8)
@@ -231,11 +231,11 @@ class Demo:
 
 # Create demo in root window for testing.
 if __name__ == '__main__':
-    root = Tkinter.Tk()
+    root = tkinter.Tk()
     Pmw.initialise(root)
     root.title(title)
 
-    exitButton = Tkinter.Button(root, text = 'Exit', command = root.destroy)
+    exitButton = tkinter.Button(root, text = 'Exit', command = root.destroy)
     exitButton.pack(side = 'bottom')
     widget = Demo(root)
     root.mainloop()

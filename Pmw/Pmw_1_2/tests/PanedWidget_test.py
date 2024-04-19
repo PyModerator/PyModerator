@@ -1,5 +1,5 @@
 import os
-import Tkinter
+import tkinter
 import Test
 import Pmw
 
@@ -15,16 +15,16 @@ kw_1 = {'orient': 'horizontal', 'hull_width': 400, 'hull_height': 300}
 tests_1 = (
   (c.pack, ()),
   (Test.num_options, (), 5),
-  (c.add, 'left', {'min' : 100}, Tkinter.Frame),
+  (c.add, 'left', {'min' : 100}, tkinter.Frame),
   (_setbackground, ('left', 'red')),
-  (c.add, 'middle', {'max' : 100}, Tkinter.Frame),
+  (c.add, 'middle', {'max' : 100}, tkinter.Frame),
   (_setbackground, ('middle', 'green')),
-  (c.add, 'right', {'size' : 100}, Tkinter.Frame),
-  (c.insert, ('first', 'middle'), {'size' : 100}, Tkinter.Frame),
+  (c.add, 'right', {'size' : 100}, tkinter.Frame),
+  (c.insert, ('first', 'middle'), {'size' : 100}, tkinter.Frame),
   (_setbackground, ('right', 'yellow')),
   (_setbackground, ('first', 'blue')),
   (c.delete, 'middle'),
-  (c.pane, 'left', Tkinter.Frame),
+  (c.pane, 'left', tkinter.Frame),
   (c.panes, (), ['left', 'first', 'right']),
   (c.configurepane, 'first', {'size' : 200}),
 )

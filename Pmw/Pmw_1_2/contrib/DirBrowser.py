@@ -31,7 +31,7 @@
 
 
 import os
-import Tkinter
+import tkinter
 import Pmw
 
 
@@ -58,7 +58,7 @@ class DirBrowserDialog(Pmw.MegaToplevel):
         interior = self.interior()
 
         self.childframe = self.createcomponent('childframe', (), None,
-                                               Tkinter.Frame,
+                                               tkinter.Frame,
                                                (interior,),
                                                borderwidth = 1,
                                                relief = 'raised',
@@ -68,7 +68,7 @@ class DirBrowserDialog(Pmw.MegaToplevel):
                              )
 
         self.labelframe = self.createcomponent('labelframe', (), None,
-                                              Tkinter.Frame,
+                                              tkinter.Frame,
                                               (self.childframe,),
                                               borderwidth = 2,
                                               relief = 'groove',
@@ -77,7 +77,7 @@ class DirBrowserDialog(Pmw.MegaToplevel):
         
         if self['label']:
             self.label = self.createcomponent('label', (), None,
-                                              Tkinter.Label,
+                                              tkinter.Label,
                                               (self.childframe,),
                                               text = self['label'],
                                               )
@@ -85,7 +85,7 @@ class DirBrowserDialog(Pmw.MegaToplevel):
 
 
         self.workframe = self.createcomponent('workframe', (), None,
-                                              Tkinter.Frame,
+                                              tkinter.Frame,
                                               (self.labelframe,),
                                               #borderwidth = 2,
                                               #relief = 'groove',
@@ -97,7 +97,7 @@ class DirBrowserDialog(Pmw.MegaToplevel):
                             )
 
         self.buttonframe = self.createcomponent('buttonframe', (), None,
-                                                Tkinter.Frame,
+                                                tkinter.Frame,
                                                 (interior,),
                                                 borderwidth = 1,
                                                 relief = 'raised',
@@ -279,7 +279,7 @@ def ErrorPopup(parent, message):
     
 if __name__ == '__main__':
 
-    rootWin = Tkinter.Tk()
+    rootWin = tkinter.Tk()
 
     Pmw.initialise()
 
@@ -295,12 +295,12 @@ if __name__ == '__main__':
                                             #hidedotfiles = 0,
                                             )
         dir = dirBrowserDialog.activate()
-        print 'Selected Directory:', dir
+        print('Selected Directory:', dir)
 
-    dirButton = Tkinter.Button(rootWin, text="Browser", command=buildBrowser)
+    dirButton = tkinter.Button(rootWin, text="Browser", command=buildBrowser)
     dirButton.pack(side = 'left', padx = 10, pady = 10)
 
-    exitButton = Tkinter.Button(rootWin, text="Quit", command=rootWin.quit)
+    exitButton = tkinter.Button(rootWin, text="Quit", command=rootWin.quit)
     exitButton.pack(side = 'left', padx = 10, pady = 10)
 
     rootWin.mainloop()

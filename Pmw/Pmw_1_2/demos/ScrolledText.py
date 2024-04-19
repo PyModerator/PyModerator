@@ -7,7 +7,7 @@ sys.path[:0] = ['../../..']
 import os
 import math
 import string
-import Tkinter
+import tkinter
 import Pmw
 
 class Demo:
@@ -77,7 +77,7 @@ class Demo:
                 header = header + '\n'
             self.st.insert('end', dataLine)
             self.st.component('rowheader').insert('end', header)
-        apply(self.st.tag_add, ('yellow',) + tuple(tagList))
+        self.st.tag_add(*('yellow',) + tuple(tagList))
 
         # Prevent users' modifying text and headers
         self.st.configure(
@@ -89,11 +89,11 @@ class Demo:
 
 # Create demo in root window for testing.
 if __name__ == '__main__':
-    root = Tkinter.Tk()
+    root = tkinter.Tk()
     Pmw.initialise(root)
     root.title(title)
 
-    exitButton = Tkinter.Button(root, text = 'Exit', command = root.destroy)
+    exitButton = tkinter.Button(root, text = 'Exit', command = root.destroy)
     exitButton.pack(side = 'bottom')
     widget = Demo(root)
     root.mainloop()

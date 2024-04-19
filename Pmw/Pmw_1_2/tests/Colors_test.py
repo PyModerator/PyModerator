@@ -1,6 +1,6 @@
 # Tests for Pmw color handling.
 
-import Tkinter
+import tkinter
 import Test
 import Pmw
 
@@ -9,11 +9,11 @@ testData = ()
 
 defaultPalette = Pmw.Color.getdefaultpalette(Test.root)
 
-c = Tkinter.Button
+c = tkinter.Button
 
 colors = ('red', 'orange', 'yellow', 'green', 'blue', 'purple', 'white')
-normalcolors = map(Pmw.Color.changebrightness,
-	(Test.root,) * len(colors), colors, (0.85,) * len(colors))
+normalcolors = list(map(Pmw.Color.changebrightness,
+	(Test.root,) * len(colors), colors, (0.85,) * len(colors)))
 
 kw = {}
 tests = (

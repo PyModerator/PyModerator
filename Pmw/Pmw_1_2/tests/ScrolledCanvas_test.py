@@ -14,7 +14,7 @@ def _createOvals():
 def _createWindow():
     w = Test.currentWidget()
     lb = Pmw.ScrolledListBox(w.interior(),
-	    items = range(20), listbox_height = 6)
+	    items = list(range(20)), listbox_height = 6)
     w.create_window(300, 100, window = lb)
 
 def _testYView(doBottom):

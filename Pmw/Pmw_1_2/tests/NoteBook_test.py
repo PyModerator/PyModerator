@@ -1,4 +1,4 @@
-import Tkinter
+import tkinter
 import Test
 import Pmw
 
@@ -28,7 +28,7 @@ def checkCallbacks(clear = 0):
 def _populatePage(pageName):
     w = Test.currentWidget()
     page = w.page(pageName)
-    text = Tkinter.Text(page)
+    text = tkinter.Text(page)
     text.pack()
     return w.pagenames()[w.index(pageName)]
 
@@ -47,22 +47,22 @@ tests_1_common = (
   (c.index, Pmw.SELECT, 'ValueError: NoteBook has no pages'),
   (c.setnaturalsize, ()),
   (c.getcurselection, ()),
-  (c.insert, ('Temp', 0), {'page_pyclass' : Tkinter.Canvas}, Tkinter.Canvas),
+  (c.insert, ('Temp', 0), {'page_pyclass' : tkinter.Canvas}, tkinter.Canvas),
   (checkCallbacks, (), (['Temp'], ['Temp'], [])),
   (c.getcurselection, (), 'Temp'),
   (c.setnaturalsize, ()),
   (c.delete, 'Temp'),
   (checkCallbacks, (), ([], [], [])),
   (c.getcurselection, ()),
-  (c.insert, ('Temp', Pmw.END), Tkinter.Frame),
+  (c.insert, ('Temp', Pmw.END), tkinter.Frame),
   (checkCallbacks, (), (['Temp'], ['Temp'], [])),
   (c.delete, 'Temp'),
-  (c.add, 'Start', Tkinter.Frame),
+  (c.add, 'Start', tkinter.Frame),
   ('Start_background', 'green'),
-  (c.insert, ('Final', Pmw.END), {'page_background' : 'blue'}, Tkinter.Frame),
-  (c.insert, ('Middle', 'Final'), Tkinter.Frame),
+  (c.insert, ('Final', Pmw.END), {'page_background' : 'blue'}, tkinter.Frame),
+  (c.insert, ('Middle', 'Final'), tkinter.Frame),
   (c.index, Pmw.SELECT, 0),
-  (c.insert, ('First', 'Start'), Tkinter.Frame),
+  (c.insert, ('First', 'Start'), tkinter.Frame),
   (c.index, Pmw.SELECT, 1),
   (c.getcurselection, (), 'Start'),
   (c.selectpage, Pmw.END),
@@ -80,7 +80,7 @@ tests_1_common = (
   (c.selectpage, 'Final'),
   (c.index, Pmw.SELECT, 3),
   (c.getcurselection, (), 'Final'),
-  (c.add, 'Last', Tkinter.Frame),
+  (c.add, 'Last', tkinter.Frame),
   (c.pagenames, (), ['First', 'Start', 'Middle', 'Final', 'Last']),
   (c.setnaturalsize, ()),
   (_populatePage, Pmw.SELECT, 'Final'),
@@ -104,9 +104,9 @@ tests_1_common = (
   (c.nextpage, 'Middle'),
   (c.getcurselection, (), 'Final'),
   (c.delete, ('First', 'Start', 'Middle', 'Final', 'Last')),
-  (c.add, 'Temp', {'page_pyclass' : Tkinter.Button}, Tkinter.Button),
+  (c.add, 'Temp', {'page_pyclass' : tkinter.Button}, tkinter.Button),
   (c.delete, 'Temp'),
-  (c.add, 'Temp', {'page_pyclass' : Tkinter.Text}, Tkinter.Text),
+  (c.add, 'Temp', {'page_pyclass' : tkinter.Text}, tkinter.Text),
   (c.delete, 'Temp'),
   (c.add, 'Temp', {'page_pyclass' : Pmw.ScrolledText,
       'page_vscrollmode' : 'static', 'page_text_state' : 'disabled'},
@@ -117,7 +117,7 @@ tests_1_common = (
   (c.getcurselection, (), 'Temp'),
   (c.delete, 'Temp'),
   (c.getcurselection, (), None),
-  (c.add, 'Start', Tkinter.Frame),
+  (c.add, 'Start', tkinter.Frame),
   (c.getcurselection, (), 'Start'),
 )
 
@@ -154,8 +154,8 @@ tests_3 = (
   (c.pack, ()),
 ) + tests_1_common + (
   ('Tab_background', 'red'),
-  (c.add, 'One', Tkinter.Frame),
-  (c.tab, 'One', Tkinter.Button),
+  (c.add, 'One', tkinter.Frame),
+  (c.tab, 'One', tkinter.Button),
 )
 
 alltests = (

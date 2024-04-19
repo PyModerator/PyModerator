@@ -1,5 +1,5 @@
 import string
-import Tkinter
+import tkinter
 import Pmw
 
 def aligngrouptags(groups):
@@ -48,19 +48,19 @@ class Group( Pmw.MegaWidget ):
 	self._ring = self.createcomponent(
 	    'ring', 
 	    (), None,
-	    Tkinter.Frame, (interior,), 
+	    tkinter.Frame, (interior,), 
 	    )
 
 	self._groupChildSite = self.createcomponent(
 	    'groupchildsite',
 	    (), None,
-	    Tkinter.Frame, (self._ring,)
+	    tkinter.Frame, (self._ring,)
 	    )
 
         self._tag = self.createcomponent(
 	    'tag',
 	    (), None,
-	    Tkinter.Label, (interior,),
+	    tkinter.Label, (interior,),
 	    )
 
 	ringBorder = (string.atoi(str(self._ring.cget('borderwidth'))) +

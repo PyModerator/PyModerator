@@ -1,6 +1,6 @@
 # Based on iwidgets2.2.0/tests/labeledwidget.test code.
 
-import Tkinter
+import tkinter
 import Test
 import Pmw
 
@@ -10,7 +10,7 @@ c = Pmw.LabeledWidget
 
 def _addListbox():
     w = Test.currentWidget()
-    lb = Tkinter.Listbox(w.interior(), relief = 'sunken')
+    lb = tkinter.Listbox(w.interior(), relief = 'sunken')
     lb.pack(padx = 10, pady = 10)
 
 def _testalignLabels():
@@ -28,7 +28,7 @@ tests_1 = (
   ('label_font', Test.font['small']),
   ('label_image', Test.flagup),
   ('label_image', ''),
-  (c.interior, (), Tkinter.Frame),
+  (c.interior, (), tkinter.Frame),
   (_testalignLabels, (), None),
 )
 

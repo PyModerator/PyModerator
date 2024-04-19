@@ -9,13 +9,13 @@
 #
 
 import time
-import cPickle
+import pickle
 import sha
 import os
 import nntplib
 import poplib
 import serVar
-import cStringIO
+import io
 import socket
 from commonDefs import *
 
@@ -46,7 +46,7 @@ class ServerApp(ServerData):
         for newsGroupID in self.ro.newsGroupIDs:
             self.newsGroupFiles[newsGroupID] = NewsGroupFile(newsGroupID)
         # Logged-in flag does not persist.
-        for moderator in self.ro.moderators.values():
+        for moderator in list(self.ro.moderators.values()):
             moderator.ro.loggedIn = 0
         try:
             self.ReadValidGroups()
@@ -55,23 +55,23 @@ class ServerApp(ServerData):
 
     def ReadValidGroups(self):
         validGrpsFile = open("%s/validGroups" % serVar.path, "rb+")
-        serVar.validNewsGroupIDs = cPickle.load(validGrpsFile)
+        serVar.validNewsGroupIDs = pickle.load(validGrpsFile)
         validGrpsFile.close()
 
     def WriteValidGroups(self):
         validGrpsFile = open("%s/validGroups" % serVar.path, "wb+")
-        cPickle.dump(serVar.validNewsGroupIDs, validGrpsFile, 1)
+        pickle.dump(serVar.validNewsGroupIDs, validGrpsFile, 1)
         validGrpsFile.close()
 
     def Read(self):
         self.dataFile.seek(0)
-        appVersion = cPickle.load(self.dataFile)
-        (self.ro, self.rw, self.cryptedPasswords) = cPickle.load(self.dataFile)
+        appVersion = pickle.load(self.dataFile)
+        (self.ro, self.rw, self.cryptedPasswords) = pickle.load(self.dataFile)
 
     def Write(self):
         self.dataFile.seek(0)
-        cPickle.dump(serVar.appVersion, self.dataFile, 1)
-        cPickle.dump((self.ro, self.rw, self.cryptedPasswords),self.dataFile, 1)
+        pickle.dump(serVar.appVersion, self.dataFile, 1)
+        pickle.dump((self.ro, self.rw, self.cryptedPasswords),self.dataFile, 1)
         self.dataFile.flush()
 
     def AddModeratorToNewsGroup(self, moderatorID, newsGroupID):
@@ -113,7 +113,7 @@ class ServerApp(ServerData):
 
     def NewModerator(self, password, moderatorData):
         moderatorID = moderatorData.ro.moderatorID
-        if self.ro.moderators.has_key(moderatorID):
+        if moderatorID in self.ro.moderators:
             raise CmdError("Moderator '%s' already exists." % moderatorID)
         if not moderatorID:
             raise CmdError("Blank moderator ID not allowed.")
@@ -140,7 +140,7 @@ class ServerApp(ServerData):
 
     def NewNewsGroup(self, newsGroupData):
         newsGroupID = newsGroupData.ro.newsGroupID
-        if self.newsGroupFiles.has_key(newsGroupID):
+        if newsGroupID in self.newsGroupFiles:
             raise CmdError("Newsgroup '%s' already exists." % newsGroupID)
         if not newsGroupID:
             raise CmdError("Blank newsgroup ID not allowed.")
@@ -185,7 +185,7 @@ def ParseMessageLines(txtLines):
         else:
             j = i
     # Remove all blank lines from hdr.
-    hdr = filter(None, hdr)
+    hdr = [_f for _f in hdr if _f]
     # Construct headers dictionary.
     hdrDict = { }
     for hdrLine in hdr:
@@ -194,7 +194,7 @@ def ParseMessageLines(txtLines):
         hdrValue = string.lstrip(hdrLine[colon + 1:])
         # Header names may be repeated, (e.g. Received), so make unique key.
         idx = 0
-        while hdrDict.has_key((hdrName, idx)):
+        while (hdrName, idx) in hdrDict:
             idx = idx + 1
         hdrDict[(hdrName, idx)] = hdrValue
     # Also replace any embedded nulls with newlines as a precaution.
@@ -205,12 +205,12 @@ def CheckCrossPosting(newsGroup, headers):
     newsGroupID = newsGroup.ro.newsGroupID
     val = headers.get(("Newsgroups", 0))
     badgroups = ""
-    if val <> None:
-        newsgroups = filter(None, map(string.strip, string.split(val, ",")))
+    if val != None:
+        newsgroups = [_f for _f in map(string.strip, string.split(val, ",")) if _f]
         for grp in newsgroups:
             flag = serVar.validNewsGroupIDs.get(grp)
-            if grp <> newsGroupID:
-                if flag <> "y" or not allowCrossPosts:
+            if grp != newsGroupID:
+                if flag != "y" or not allowCrossPosts:
                     badgroups = "%s%s: %s, " % (badgroups, grp,
                                             string.capitalize(str(flag)))
         if badgroups:
@@ -229,9 +229,9 @@ def ReadPOPMailbox(newsGroupID):
         popServer.user(newsGroupRW.popUserID)
         popServer.pass_(newsGroupRW.popPassword)
         numMsgs, popStat = popServer.stat()
-    except socket.error, val:
+    except socket.error as val:
         raise CmdError("Failed to connect to POP mail server: %s" % val[1])
-    except poplib.error_proto, val:
+    except poplib.error_proto as val:
         raise CmdError("POP mail protocol failure: %s" % val)
     for idx in range(numMsgs):
         popMsg = popServer.retr(idx + 1)
@@ -279,11 +279,11 @@ class NewsGroupFile:
 
     def ReadData(self):
         self.dataFile.seek(0)
-        self.newsGroupData = cPickle.load(self.dataFile)
+        self.newsGroupData = pickle.load(self.dataFile)
 
     def WriteData(self):
         self.dataFile.seek(0)
-        cPickle.dump(self.newsGroupData, self.dataFile, 1)
+        pickle.dump(self.newsGroupData, self.dataFile, 1)
         self.dataFile.flush()
 
     def NextMessageID(self):
@@ -295,7 +295,7 @@ class NewsGroupFile:
 
     def ReadMessage(self, messageID):
         try:
-            msg = cPickle.load(open("%s/%06d" %
+            msg = pickle.load(open("%s/%06d" %
                                 (self.baseDir, messageID), "rb+"))
         except IOError:
             raise CmdError("Invalid message ID '%d'." % messageID)
@@ -304,7 +304,7 @@ class NewsGroupFile:
     def WriteMessage(self, message):
         messageID = message.ro.messageID
         try:
-            cPickle.dump(message,
+            pickle.dump(message,
                         open("%s/%06d" % (self.baseDir, messageID), "wb+"), 1)
         except IOError:
             raise CmdError("Unable to update message ID '%d'." % messageID)
@@ -322,7 +322,7 @@ class NewsGroupFile:
                 giveToID = moderatorIDs[nextModerator]
                 newsGroupRO.nextModerator = (nextModerator + 1) % numModerators
                 moderator = serVar.app.ro.moderators.get(giveToID)
-                if moderator and moderator.ro.userType <> "Guest":
+                if moderator and moderator.ro.userType != "Guest":
                     if not moderator.rw.vacation:
                         evt0.ro.moderatorID = giveToID
                         break
@@ -376,13 +376,13 @@ class NewsGroupFile:
 # selected item names.
 
 def IncomingHdrStr(msg):
-    return string.join(msg.rw.inHeaders.values(), "\n")
+    return string.join(list(msg.rw.inHeaders.values()), "\n")
 
 def IncomingBdyStr(msg):
     return msg.rw.inTxt
 
 def OutgoingHdrStr(msg):
-    return string.join(msg.ro.outHeaders.values(), "\n")
+    return string.join(list(msg.ro.outHeaders.values()), "\n")
 
 def OutgoingBdyStr(msg):
     return msg.ro.outTxt

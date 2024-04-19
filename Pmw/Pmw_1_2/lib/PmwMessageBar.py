@@ -1,7 +1,7 @@
 # Class to display messages in an information line.
 
 import string
-import Tkinter
+import tkinter
 import Pmw
 
 class MessageBar(Pmw.MegaWidget):
@@ -35,12 +35,12 @@ class MessageBar(Pmw.MegaWidget):
 	interior = self.interior()
 	self._messageBarEntry = self.createcomponent('entry',
 		(), None,
-		Tkinter.Entry, (interior,))
+		tkinter.Entry, (interior,))
 
         # Can't always use 'disabled', since this greys out text in Tk 8.4.2
         try:
             self._messageBarEntry.configure(state = 'readonly')
-        except Tkinter.TclError:
+        except tkinter.TclError:
             self._messageBarEntry.configure(state = 'disabled')
 
 	self._messageBarEntry.grid(column=2, row=2, sticky=self['sticky'])
@@ -51,7 +51,7 @@ class MessageBar(Pmw.MegaWidget):
 
 	# Initialise instance variables.
 	self._numPriorities = 0
-	for info in self['messagetypes'].values():
+	for info in list(self['messagetypes'].values()):
 	    if self._numPriorities < info[0]:
 		self._numPriorities = info[0]
 
@@ -111,7 +111,7 @@ class MessageBar(Pmw.MegaWidget):
     def resetmessages(self, type):
 	priority = self['messagetypes'][type][0]
 	self._clearActivemessage(priority)
-	for messagetype, info in self['messagetypes'].items():
+	for messagetype, info in list(self['messagetypes'].items()):
 	    thisPriority = info[0]
 	    showtime = info[1]
 	    if thisPriority < priority and showtime != 0:
@@ -137,7 +137,7 @@ class MessageBar(Pmw.MegaWidget):
         # Can't always use 'disabled', since this greys out text in Tk 8.4.2
         try:
             self._messageBarEntry.configure(state = 'readonly')
-        except Tkinter.TclError:
+        except tkinter.TclError:
             self._messageBarEntry.configure(state = 'disabled')
 
-Pmw.forwardmethods(MessageBar, Tkinter.Entry, '_messageBarEntry')
+Pmw.forwardmethods(MessageBar, tkinter.Entry, '_messageBarEntry')

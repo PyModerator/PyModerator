@@ -3,7 +3,7 @@
 import string
 import sys
 import time
-import Tkinter
+import tkinter
 import Pmw
 
 class TimeCounter(Pmw.MegaWidget):
@@ -62,14 +62,14 @@ class TimeCounter(Pmw.MegaWidget):
 	# be raised (but not around the label).
 	if self['labelpos'] is None:
 	    frame = interior
-            if not kw.has_key('hull_relief'):
+            if 'hull_relief' not in kw:
                 frame.configure(relief = 'raised')
-            if not kw.has_key('hull_borderwidth'):
+            if 'hull_borderwidth' not in kw:
                 frame.configure(borderwidth = 1)
 	else:
 	    frame = self.createcomponent('frame',
 		    (), None,
-		    Tkinter.Frame, (interior,),
+		    tkinter.Frame, (interior,),
                     relief = 'raised', borderwidth = 1)
 	    frame.grid(column=2, row=2, sticky='nsew')
 	    interior.grid_columnconfigure(2, weight=1)
@@ -80,7 +80,7 @@ class TimeCounter(Pmw.MegaWidget):
 	# Create the hour down arrow.
 	self._downHourArrowBtn = self.createcomponent('downhourarrow',
 		(), 'Arrow',
-		Tkinter.Canvas, (frame,),
+		tkinter.Canvas, (frame,),
 		width = 16, height = 16, relief = 'raised', borderwidth = 2)
     	self.arrowDirection[self._downHourArrowBtn] = 'down'
 	self._downHourArrowBtn.grid(column = 0, row = 2)
@@ -88,7 +88,7 @@ class TimeCounter(Pmw.MegaWidget):
 	# Create the minute down arrow.
 	self._downMinuteArrowBtn = self.createcomponent('downminutearrow',
 		(), 'Arrow',
-		Tkinter.Canvas, (frame,),
+		tkinter.Canvas, (frame,),
 		width = 16, height = 16, relief = 'raised', borderwidth = 2)
     	self.arrowDirection[self._downMinuteArrowBtn] = 'down'
 	self._downMinuteArrowBtn.grid(column = 1, row = 2)
@@ -96,7 +96,7 @@ class TimeCounter(Pmw.MegaWidget):
 	# Create the second down arrow.
 	self._downSecondArrowBtn = self.createcomponent('downsecondarrow',
 		(), 'Arrow',
-		Tkinter.Canvas, (frame,),
+		tkinter.Canvas, (frame,),
 		width = 16, height = 16, relief = 'raised', borderwidth = 2)
     	self.arrowDirection[self._downSecondArrowBtn] = 'down'
 	self._downSecondArrowBtn.grid(column = 2, row = 2)
@@ -126,7 +126,7 @@ class TimeCounter(Pmw.MegaWidget):
 	# Create the hour up arrow.
 	self._upHourArrowBtn = self.createcomponent('uphourarrow',
 		(), 'Arrow',
-		Tkinter.Canvas, (frame,),
+		tkinter.Canvas, (frame,),
 		width = 16, height = 16, relief = 'raised', borderwidth = 2)
     	self.arrowDirection[self._upHourArrowBtn] = 'up'
 	self._upHourArrowBtn.grid(column = 0, row = 0)
@@ -134,7 +134,7 @@ class TimeCounter(Pmw.MegaWidget):
 	# Create the minute up arrow.
 	self._upMinuteArrowBtn = self.createcomponent('upminutearrow',
 		(), 'Arrow',
-		Tkinter.Canvas, (frame,),
+		tkinter.Canvas, (frame,),
 		width = 16, height = 16, relief = 'raised', borderwidth = 2)
     	self.arrowDirection[self._upMinuteArrowBtn] = 'up'
 	self._upMinuteArrowBtn.grid(column = 1, row = 0)
@@ -142,7 +142,7 @@ class TimeCounter(Pmw.MegaWidget):
 	# Create the second up arrow.
 	self._upSecondArrowBtn = self.createcomponent('upsecondarrow',
 		(), 'Arrow',
-		Tkinter.Canvas, (frame,),
+		tkinter.Canvas, (frame,),
 		width = 16, height = 16, relief = 'raised', borderwidth = 2)
     	self.arrowDirection[self._upSecondArrowBtn] = 'up'
 	self._upSecondArrowBtn.grid(column = 2, row = 0)
@@ -286,7 +286,7 @@ class TimeCounter(Pmw.MegaWidget):
     def setvalue(self, text):
         list = string.split(text, ':')
 	if len(list) != 3:
-	    raise ValueError, 'invalid value: ' + text
+	    raise ValueError('invalid value: ' + text)
 
 	self._hour = string.atoi(list[0])
 	self._minute = string.atoi(list[1])

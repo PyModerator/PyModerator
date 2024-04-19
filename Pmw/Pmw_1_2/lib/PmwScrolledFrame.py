@@ -1,6 +1,6 @@
 import string
 import types
-import Tkinter
+import tkinter
 import Pmw
 
 class ScrolledFrame(Pmw.MegaWidget):
@@ -36,7 +36,7 @@ class ScrolledFrame(Pmw.MegaWidget):
 	    # Create a frame widget to act as the border of the clipper. 
 	    self._borderframe = self.createcomponent('borderframe',
 		    (), None,
-		    Tkinter.Frame, (self.origInterior,),
+		    tkinter.Frame, (self.origInterior,),
 		    relief = 'sunken',
 		    borderwidth = 2,
 	    )
@@ -45,7 +45,7 @@ class ScrolledFrame(Pmw.MegaWidget):
 	    # Create the clipping window.
 	    self._clipper = self.createcomponent('clipper',
 		    (), None,
-		    Tkinter.Frame, (self._borderframe,),
+		    tkinter.Frame, (self._borderframe,),
 		    width = 400,
 		    height = 300,
 		    highlightthickness = 0,
@@ -56,7 +56,7 @@ class ScrolledFrame(Pmw.MegaWidget):
 	    # Create the clipping window.
 	    self._clipper = self.createcomponent('clipper',
 		    (), None,
-		    Tkinter.Frame, (self.origInterior,),
+		    tkinter.Frame, (self.origInterior,),
 		    width = 400,
 		    height = 300,
 		    relief = 'sunken',
@@ -70,7 +70,7 @@ class ScrolledFrame(Pmw.MegaWidget):
 	# Create the horizontal scrollbar
 	self._horizScrollbar = self.createcomponent('horizscrollbar',
 		(), 'Scrollbar',
-		Tkinter.Scrollbar, (self.origInterior,),
+		tkinter.Scrollbar, (self.origInterior,),
 	        orient='horizontal',
 		command=self.xview
 	)
@@ -78,7 +78,7 @@ class ScrolledFrame(Pmw.MegaWidget):
 	# Create the vertical scrollbar
 	self._vertScrollbar = self.createcomponent('vertscrollbar',
 		(), 'Scrollbar',
-		Tkinter.Scrollbar, (self.origInterior,),
+		tkinter.Scrollbar, (self.origInterior,),
 		orient='vertical',
 		command=self.yview
 	)
@@ -100,7 +100,7 @@ class ScrolledFrame(Pmw.MegaWidget):
 	# scrolled.
 	self._frame = self.createcomponent('frame',
 		(), None,
-		Tkinter.Frame, (self._clipper,)
+		tkinter.Frame, (self._clipper,)
 	)
 
 	# Whenever the clipping window or scrolled frame change size,
@@ -143,7 +143,7 @@ class ScrolledFrame(Pmw.MegaWidget):
     # update the frame and the scrollbar.
     def xview(self, mode = None, value = None, units = None):
 
-        if type(value) == types.StringType:
+        if type(value) == bytes:
             value = string.atof(value)
         if mode is None:
             return self._horizScrollbar.get()
@@ -165,7 +165,7 @@ class ScrolledFrame(Pmw.MegaWidget):
     # update the frame and the scrollbar.
     def yview(self, mode = None, value = None, units = None):
 
-        if type(value) == types.StringType:
+        if type(value) == bytes:
             value = string.atof(value)
         if mode is None:
             return self._vertScrollbar.get()
@@ -202,7 +202,7 @@ class ScrolledFrame(Pmw.MegaWidget):
 		self._toggleHorizScrollbar()
 	else:
 	    message = 'bad hscrollmode option "%s": should be static, dynamic, or none' % mode
-	    raise ValueError, message
+	    raise ValueError(message)
 
     def _vscrollMode(self):
 	# The vertical scroll mode has been configured.
@@ -220,7 +220,7 @@ class ScrolledFrame(Pmw.MegaWidget):
 		self._toggleVertScrollbar()
 	else:
 	    message = 'bad vscrollmode option "%s": should be static, dynamic, or none' % mode
-	    raise ValueError, message
+	    raise ValueError(message)
 
     def _horizflex(self):
 	# The horizontal flex mode has been configured.
@@ -230,7 +230,7 @@ class ScrolledFrame(Pmw.MegaWidget):
 	if flex not in self._flexoptions:
 	    message = 'bad horizflex option "%s": should be one of %s' % \
 		    (flex, str(self._flexoptions))
-	    raise ValueError, message
+	    raise ValueError(message)
 
 	self.reposition()
 
@@ -242,7 +242,7 @@ class ScrolledFrame(Pmw.MegaWidget):
 	if flex not in self._flexoptions:
 	    message = 'bad vertflex option "%s": should be one of %s' % \
 		    (flex, str(self._flexoptions))
-	    raise ValueError, message
+	    raise ValueError(message)
 
 	self.reposition()
 

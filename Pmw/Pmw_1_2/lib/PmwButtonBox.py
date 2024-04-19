@@ -1,7 +1,7 @@
 # Based on iwidgets2.2.0/buttonbox.itk code.
 
 import types
-import Tkinter
+import tkinter
 import Pmw
 
 class ButtonBox(Pmw.MegaWidget):
@@ -29,7 +29,7 @@ class ButtonBox(Pmw.MegaWidget):
 	else:
 	    self._buttonBoxFrame = self.createcomponent('frame',
 		    (), None,
-		    Tkinter.Frame, (interior,))
+		    tkinter.Frame, (interior,))
 	    self._buttonBoxFrame.grid(column=2, row=2, sticky='nsew')
 	    columnOrRow = 2
 
@@ -41,8 +41,8 @@ class ButtonBox(Pmw.MegaWidget):
 	elif orient == 'vertical':
 	    interior.grid_rowconfigure(columnOrRow, weight = 1)
 	else:
-	    raise ValueError, 'bad orient option ' + repr(orient) + \
-		': must be either \'horizontal\' or \'vertical\''
+	    raise ValueError('bad orient option ' + repr(orient) + \
+		': must be either \'horizontal\' or \'vertical\'')
 
 	# Initialise instance variables.
 
@@ -70,41 +70,40 @@ class ButtonBox(Pmw.MegaWidget):
 
     def index(self, index, forInsert = 0):
 	listLength = len(self._buttonList)
-	if type(index) == types.IntType:
+	if type(index) == int:
 	    if forInsert and index <= listLength:
 		return index
 	    elif not forInsert and index < listLength:
 		return index
 	    else:
-		raise ValueError, 'index "%s" is out of range' % index
+		raise ValueError('index "%s" is out of range' % index)
 	elif index is Pmw.END:
 	    if forInsert:
 		return listLength
 	    elif listLength > 0:
 		return listLength - 1
 	    else:
-		raise ValueError, 'ButtonBox has no buttons'
+		raise ValueError('ButtonBox has no buttons')
 	elif index is Pmw.DEFAULT:
 	    if self._defaultButton is not None:
 		return self._defaultButton
-	    raise ValueError, 'ButtonBox has no default'
+	    raise ValueError('ButtonBox has no default')
 	else:
-            names = map(lambda t: t[0], self._buttonList)
+            names = [t[0] for t in self._buttonList]
             if index in names:
                 return names.index(index)
 	    validValues = 'a name, a number, Pmw.END or Pmw.DEFAULT'
-	    raise ValueError, \
-		'bad index "%s": must be %s' % (index, validValues)
+	    raise ValueError('bad index "%s": must be %s' % (index, validValues))
 
     def insert(self, componentName, beforeComponent = 0, **kw):
 	if componentName in self.components():
-	    raise ValueError, 'button "%s" already exists' % componentName
-	if not kw.has_key('text'):
+	    raise ValueError('button "%s" already exists' % componentName)
+	if 'text' not in kw:
 	    kw['text'] = componentName
         kw['default'] = 'normal'
-	button = apply(self.createcomponent, (componentName,
+	button = self.createcomponent(*(componentName,
 		(), 'Button',
-		Tkinter.Button, (self._buttonBoxFrame,)), kw)
+		tkinter.Button, (self._buttonBoxFrame,)), **kw)
 
 	index = self.index(beforeComponent, 1)
 	horizontal = self['orient'] == 'horizontal'
@@ -135,7 +134,7 @@ class ButtonBox(Pmw.MegaWidget):
 	return button
 
     def add(self, componentName, **kw):
-        return apply(self.insert, (componentName, len(self._buttonList)), kw)
+        return self.insert(*(componentName, len(self._buttonList)), **kw)
 
     def delete(self, index):
         index = self.index(index)

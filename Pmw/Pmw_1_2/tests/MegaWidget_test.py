@@ -1,6 +1,6 @@
 # Based on itk2.2/tests/widget.test code.
 
-import Tkinter
+import tkinter
 import Test
 import Pmw
 
@@ -26,12 +26,12 @@ class TestWidget(Pmw.MegaWidget):
 	interior = self.interior()
 	self._label = self.createcomponent('label',
 		(), None,
-		Tkinter.Label, (interior,))
+		tkinter.Label, (interior,))
 	self._label.pack(side='left', padx=2)
 
 	self._button = self.createcomponent('button',
 		(), 'Mygroup',
-		Tkinter.Button, (interior,), text = 'Push Me',
+		tkinter.Button, (interior,), text = 'Push Me',
 		activebackground = 'white', background = 'ivory')
 	self._button.pack(side='right', fill='x', padx=2)
 
@@ -65,7 +65,7 @@ def _addComponent():
     w = Test.currentWidget()
     label2 = w.createcomponent('label2',
 	    (), 'Mygroup',
-	    Tkinter.Label, (w.interior(),),
+	    tkinter.Label, (w.interior(),),
 	    text = 'Temporary', background = 'yellow')
     label2.pack(fill = 'x')
     return label2.cget('text')
@@ -100,9 +100,9 @@ tests = (
   ('status', 'test message'),
   ('label_text', 'Label:'),
   (c.components, (), ['button', 'hull', 'label']),
-  (c.component, ('hull'), Tkinter.Frame),
-  (c.component, ('label'), Tkinter.Label),
-  (c.component, ('button'), Tkinter.Button),
+  (c.component, ('hull'), tkinter.Frame),
+  (c.component, ('label'), tkinter.Label),
+  (c.component, ('button'), tkinter.Button),
   (_componentOption, ('hull', 'cursor'), 'trek'),
   (_componentOption, ('label', 'cursor'), 'trek'),
   (_componentOption, ('hull', 'background'), 'red'),

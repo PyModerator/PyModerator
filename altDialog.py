@@ -2,7 +2,7 @@
 # Adapted from tkSimpleDialog.py. A simple dialog widget base class.
 #
 
-from Tkinter import *
+from tkinter import *
 
 class AltDialog(Toplevel):
     def __init__(self, parent, title = None,

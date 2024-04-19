@@ -4,7 +4,7 @@ title = 'Pmw.MessageBar demonstration'
 import sys
 sys.path[:0] = ['../../..']
 
-import Tkinter
+import tkinter
 import Pmw
 
 class Demo:
@@ -75,11 +75,11 @@ stateMessages = {
 
 # Create demo in root window for testing.
 if __name__ == '__main__':
-    root = Tkinter.Tk()
+    root = tkinter.Tk()
     Pmw.initialise(root)
     root.title(title)
 
-    exitButton = Tkinter.Button(root, text = 'Exit', command = root.destroy)
+    exitButton = tkinter.Button(root, text = 'Exit', command = root.destroy)
     exitButton.pack(side = 'bottom')
     widget = Demo(root)
     root.mainloop()

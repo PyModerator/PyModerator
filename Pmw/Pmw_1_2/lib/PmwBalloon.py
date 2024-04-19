@@ -1,6 +1,6 @@
 import os
 import string
-import Tkinter
+import tkinter
 import Pmw
 
 class Balloon(Pmw.MegaToplevel):
@@ -33,13 +33,13 @@ class Balloon(Pmw.MegaToplevel):
 	interior = self.interior()
 	self._label = self.createcomponent('label',
 		(), None,
-		Tkinter.Label, (interior,))
+		tkinter.Label, (interior,))
 	self._label.pack()
 
         # The default hull configuration options give a black border
         # around the balloon, but avoids a black 'flash' when the
         # balloon is deiconified, before the text appears.
-        if not kw.has_key('hull_background'):
+        if 'hull_background' not in kw:
             self.configure(hull_background = \
                     str(self._label.cget('background')))
 
@@ -104,7 +104,7 @@ class Balloon(Pmw.MegaToplevel):
 
     def unbind(self, widget):
         if hasattr(widget, '_Pmw_BalloonBindIds'):
-            if widget._Pmw_BalloonBindIds.has_key(None):
+            if None in widget._Pmw_BalloonBindIds:
                 (enterId, motionId, leaveId, buttonId, destroyId) = \
                         widget._Pmw_BalloonBindIds[None]
                 # Need to pass in old bindings, so that Tkinter can
@@ -157,7 +157,7 @@ class Balloon(Pmw.MegaToplevel):
 
     def tagunbind(self, widget, tagOrItem):
         if hasattr(widget, '_Pmw_BalloonBindIds'):
-            if widget._Pmw_BalloonBindIds.has_key(tagOrItem):
+            if tagOrItem in widget._Pmw_BalloonBindIds:
                 (enterId, motionId, leaveId, buttonId) = \
                         widget._Pmw_BalloonBindIds[tagOrItem]
                 widget.tag_unbind(tagOrItem, '<Enter>', enterId)
@@ -208,14 +208,14 @@ class Balloon(Pmw.MegaToplevel):
 
     def _state(self):
 	if self['state'] not in ('both', 'balloon', 'status', 'none'):
-	    raise ValueError, 'bad state option ' + repr(self['state']) + \
+	    raise ValueError('bad state option ' + repr(self['state']) + \
 		': should be one of \'both\', \'balloon\', ' + \
-		'\'status\' or \'none\''
+		'\'status\' or \'none\'')
 
     def _relmouse(self):
 	if self['relmouse'] not in ('both', 'x', 'y', 'none'):
-	    raise ValueError, 'bad relmouse option ' + repr(self['relmouse'])+ \
-		': should be one of \'both\', \'x\', ' + '\'y\' or \'none\''
+	    raise ValueError('bad relmouse option ' + repr(self['relmouse'])+ \
+		': should be one of \'both\', \'x\', ' + '\'y\' or \'none\'')
 
     def _enter(self, event, widget, statusHelp, balloonHelp, isItem):
 

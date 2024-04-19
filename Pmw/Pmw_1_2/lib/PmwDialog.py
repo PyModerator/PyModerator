@@ -8,7 +8,7 @@
 
 import sys
 import types
-import Tkinter
+import tkinter
 import Pmw
 
 # A Toplevel with a ButtonBox and child site.
@@ -42,9 +42,8 @@ class Dialog(Pmw.MegaToplevel):
 	# Set up pack options according to the position of the button box.
         pos = self['buttonboxpos']
 	if pos not in 'nsew':
-	    raise ValueError, \
-	        'bad buttonboxpos option "%s":  should be n, s, e, or w' \
-		    % pos
+	    raise ValueError('bad buttonboxpos option "%s":  should be n, s, e, or w' \
+		    % pos)
 
 	if pos in 'ns':
 	    orient = 'horizontal'
@@ -72,14 +71,14 @@ class Dialog(Pmw.MegaToplevel):
 	if width > 0:
 	    self._separator = self.createcomponent('separator',
 		    (), None,
-		    Tkinter.Frame, (oldInterior,), relief = 'sunken',
+		    tkinter.Frame, (oldInterior,), relief = 'sunken',
 		    height = width, width = width, borderwidth = width / 2)
 	    self._separator.pack(side = side, fill = fill)
 	
 	# Create the child site.
 	self.__dialogChildSite = self.createcomponent('dialogchildsite',
 		(), None,
-		Tkinter.Frame, (oldInterior,))
+		tkinter.Frame, (oldInterior,))
 	self.__dialogChildSite.pack(side=side, fill='both', expand=1)
 
 	self.oldButtons = ()
@@ -138,9 +137,8 @@ class Dialog(Pmw.MegaToplevel):
 
     def _buttons(self):
 	buttons = self['buttons']
-	if type(buttons) != types.TupleType and type(buttons) != types.ListType:
-	    raise ValueError, \
-	        'bad buttons option "%s": should be a tuple' % str(buttons)
+	if type(buttons) != tuple and type(buttons) != list:
+	    raise ValueError('bad buttons option "%s": should be a tuple' % str(buttons))
 	if self.oldButtons == buttons:
 	  return
 

@@ -4,7 +4,7 @@ title = 'Pmw toplevel megawidget demonstration'
 import sys
 sys.path[:0] = ['../../..']
 
-import Tkinter
+import tkinter
 import Pmw
 
 class MessageInfo(Pmw.MegaToplevel):
@@ -25,14 +25,14 @@ class MessageInfo(Pmw.MegaToplevel):
 
 	self._dismiss = self.createcomponent('dismiss',
 		(), None,
-		Tkinter.Button, (interior,),
+		tkinter.Button, (interior,),
 		text = 'Dismiss',
 		command = self.goodbye)
 	self._dismiss.pack(side = 'bottom', pady = 4)
 
 	self._separator = self.createcomponent('separator',
 		(), None,
-		Tkinter.Frame, (interior,),
+		tkinter.Frame, (interior,),
 		height = 2,
 		borderwidth = 1,
 		relief = 'sunken')
@@ -40,12 +40,12 @@ class MessageInfo(Pmw.MegaToplevel):
 
 	self._icon = self.createcomponent('icon',
 		(), None,
-		Tkinter.Label, (interior,))
+		tkinter.Label, (interior,))
 	self._icon.pack(side = 'left', padx = 8, pady = 8)
 
 	self._infoFrame = self.createcomponent('infoframe',
 		(), None,
-		Tkinter.Frame, (interior,))
+		tkinter.Frame, (interior,))
 	self._infoFrame.pack(
 		side = 'left',
 		fill = 'both',
@@ -55,7 +55,7 @@ class MessageInfo(Pmw.MegaToplevel):
 
 	self._message = self.createcomponent('message',
 		(), None,
-		Tkinter.Label, (interior,))
+		tkinter.Label, (interior,))
 	self._message.pack(expand = 1, fill = 'both', padx = 10, pady = 10)
 
 	self.bind('<Return>', self.goodbye)
@@ -69,7 +69,7 @@ class MessageInfo(Pmw.MegaToplevel):
 class Demo:
     def __init__(self, parent):
 	# Create button to launch the megawidget.
-	self.button = Tkinter.Button(parent,
+	self.button = tkinter.Button(parent,
 		command = self.showMessageInfo,
 		text = 'Show toplevel megawidget')
 	self.button.pack(padx = 8, pady = 8)
@@ -98,11 +98,11 @@ class Demo:
 
 # Create demo in root window for testing.
 if __name__ == '__main__':
-    root = Tkinter.Tk()
+    root = tkinter.Tk()
     Pmw.initialise(root)
     root.title(title)
 
-    exitButton = Tkinter.Button(root, text = 'Exit', command = root.destroy)
+    exitButton = tkinter.Button(root, text = 'Exit', command = root.destroy)
     exitButton.pack(side = 'bottom')
     widget = Demo(root)
     root.mainloop()

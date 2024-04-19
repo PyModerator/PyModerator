@@ -1,7 +1,7 @@
 import string
 import sys
 import types
-import Tkinter
+import tkinter
 import Pmw
 
 class Counter(Pmw.MegaWidget):
@@ -42,14 +42,14 @@ class Counter(Pmw.MegaWidget):
 	# be raised (but not around the label).
 	if self['labelpos'] is None:
 	    frame = interior
-            if not kw.has_key('hull_relief'):
+            if 'hull_relief' not in kw:
                 frame.configure(relief = 'raised')
-            if not kw.has_key('hull_borderwidth'):
+            if 'hull_borderwidth' not in kw:
                 frame.configure(borderwidth = 1)
 	else:
 	    frame = self.createcomponent('frame',
 		    (), None,
-		    Tkinter.Frame, (interior,),
+		    tkinter.Frame, (interior,),
                     relief = 'raised', borderwidth = 1)
 	    frame.grid(column=2, row=2, sticky=self['sticky'])
 	    interior.grid_columnconfigure(2, weight=1)
@@ -58,7 +58,7 @@ class Counter(Pmw.MegaWidget):
 	# Create the down arrow.
 	self._downArrowBtn = self.createcomponent('downarrow',
 		(), 'Arrow',
-		Tkinter.Canvas, (frame,),
+		tkinter.Canvas, (frame,),
 		width = 16, height = 16, relief = 'raised', borderwidth = 2)
 
 	# Create the entry field.
@@ -69,7 +69,7 @@ class Counter(Pmw.MegaWidget):
 	# Create the up arrow.
 	self._upArrowBtn = self.createcomponent('uparrow',
 		(), 'Arrow',
-		Tkinter.Canvas, (frame,),
+		tkinter.Canvas, (frame,),
 		width = 16, height = 16, relief = 'raised', borderwidth = 2)
 
 	padx = self['padx']
@@ -82,7 +82,7 @@ class Counter(Pmw.MegaWidget):
 	    self._upArrowBtn.grid(column = 2, row = 0)
 	    frame.grid_columnconfigure(1, weight = 1)
 	    frame.grid_rowconfigure(0, weight = 1)
-	    if Tkinter.TkVersion >= 4.2:
+	    if tkinter.TkVersion >= 4.2:
 		frame.grid_columnconfigure(0, pad = padx)
 		frame.grid_columnconfigure(2, pad = padx)
 		frame.grid_rowconfigure(0, pad = pady)
@@ -94,13 +94,13 @@ class Counter(Pmw.MegaWidget):
 	    frame.grid_columnconfigure(0, weight = 1)
 	    frame.grid_rowconfigure(0, weight = 1)
 	    frame.grid_rowconfigure(2, weight = 1)
-	    if Tkinter.TkVersion >= 4.2:
+	    if tkinter.TkVersion >= 4.2:
 		frame.grid_rowconfigure(0, pad = pady)
 		frame.grid_rowconfigure(2, pad = pady)
 		frame.grid_columnconfigure(0, pad = padx)
 	else:
-	    raise ValueError, 'bad orient option ' + repr(orient) + \
-		': must be either \'horizontal\' or \'vertical\''
+	    raise ValueError('bad orient option ' + repr(orient) + \
+		': must be either \'horizontal\' or \'vertical\'')
 
 	self.createlabel(interior)
 
@@ -193,9 +193,9 @@ class Counter(Pmw.MegaWidget):
     def _datatype(self):
 	datatype = self['datatype']
 
-	if type(datatype) is types.DictionaryType:
+	if type(datatype) is dict:
 	    self._counterArgs = datatype.copy()
-	    if self._counterArgs.has_key('counter'):
+	    if 'counter' in self._counterArgs:
 		datatype = self._counterArgs['counter']
 		del self._counterArgs['counter']
 	    else:
@@ -203,15 +203,15 @@ class Counter(Pmw.MegaWidget):
 	else:
 	    self._counterArgs = {}
 
-	if _counterCommands.has_key(datatype):
+	if datatype in _counterCommands:
 	    self._counterCommand = _counterCommands[datatype]
 	elif callable(datatype):
 	    self._counterCommand = datatype
 	else:
-	    validValues = _counterCommands.keys()
+	    validValues = list(_counterCommands.keys())
 	    validValues.sort()
-	    raise ValueError, ('bad datatype value "%s":  must be a' +
-		    ' function or one of %s') % (datatype, validValues)
+	    raise ValueError(('bad datatype value "%s":  must be a' +
+		    ' function or one of %s') % (datatype, validValues))
 
     def _forceCount(self, factor):
 	if not self.valid():
@@ -220,8 +220,7 @@ class Counter(Pmw.MegaWidget):
 
 	text = self._counterEntry.get()
 	try:
-	    value = apply(self._counterCommand,
-		    (text, factor, self['increment']), self._counterArgs)
+	    value = self._counterCommand(*(text, factor, self['increment']), **self._counterArgs)
 	except ValueError:
 	    self.bell()
 	    return
@@ -239,8 +238,7 @@ class Counter(Pmw.MegaWidget):
 	self._timerId = None
 	origtext = self._counterEntry.get()
 	try:
-	    value = apply(self._counterCommand,
-		    (origtext, factor, self['increment']), self._counterArgs)
+	    value = self._counterCommand(*(origtext, factor, self['increment']), **self._counterArgs)
 	except ValueError:
 	    # If text is invalid, stop counting.
 	    self._stopCounting()

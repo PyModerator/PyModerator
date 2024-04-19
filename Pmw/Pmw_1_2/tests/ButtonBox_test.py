@@ -1,6 +1,6 @@
 # Based on iwidgets2.2.0/tests/buttonbox.test code.
 
-import Tkinter
+import tkinter
 import Test
 import Pmw
 
@@ -11,8 +11,8 @@ c = Pmw.ButtonBox
 kw_1 = {}
 tests_1 = (
   (c.pack, ()),
-  (c.add, 'Yes', Tkinter.Button),
-  (c.add, 'No', Tkinter.Button),
+  (c.add, 'Yes', tkinter.Button),
+  (c.add, 'No', tkinter.Button),
   (c.setdefault, 'Yes'),
   (c.alignbuttons, ()),
   (Test.num_options, (), 5),
@@ -30,8 +30,8 @@ tests_1 = (
   (c.index, Pmw.DEFAULT, 0),
   (c.index, 'No', 1),
   (c.index, 'Yes', 0),
-  (c.add, 'Maybe', Tkinter.Button),
-  (c.insert, ('Never', 0), {'text' : 'Never Never'}, Tkinter.Button),
+  (c.add, 'Maybe', tkinter.Button),
+  (c.insert, ('Never', 0), {'text' : 'Never Never'}, tkinter.Button),
   (c.setdefault, 'Never'),
   (c.invoke, 'Yes', ''),
   (c.invoke, (), ''),
@@ -52,8 +52,8 @@ kw_2 = {
 }
 tests_2 = (
   (c.pack, ()),
-  (c.add, 'Hello', Tkinter.Button),
-  (c.insert, ('GoodBye', Pmw.END), Tkinter.Button),
+  (c.add, 'Hello', tkinter.Button),
+  (c.insert, ('GoodBye', Pmw.END), tkinter.Button),
   (c.setdefault, 'Hello'),
   (c.setdefault, 'GoodBye'),
   (c.setdefault, None),

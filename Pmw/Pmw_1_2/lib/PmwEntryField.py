@@ -3,7 +3,7 @@
 import re
 import string
 import types
-import Tkinter
+import tkinter
 import Pmw
 
 # Possible return values of validation functions.
@@ -39,7 +39,7 @@ class EntryField(Pmw.MegaWidget):
 	interior = self.interior()
 	self._entryFieldEntry = self.createcomponent('entry',
 		(), None,
-		Tkinter.Entry, (interior,))
+		tkinter.Entry, (interior,))
 	self._entryFieldEntry.grid(column=2, row=2, sticky=self['sticky'])
 	if self['value'] != '':
 	    self.__setEntry(self['value'])
@@ -63,21 +63,21 @@ class EntryField(Pmw.MegaWidget):
         # bindings, so that a reference to root is created by
         # bind_class rather than a reference to self, which would
         # prevent object cleanup.
-        if EntryField._classBindingsDefinedFor != Tkinter._default_root:
+        if EntryField._classBindingsDefinedFor != tkinter._default_root:
 	    tagList = self._entryFieldEntry.bindtags()
-            root  = Tkinter._default_root
+            root  = tkinter._default_root
 	    	    
 	    allSequences = {}
 	    for tag in tagList:
 
                 sequences = root.bind_class(tag)
-                if type(sequences) is types.StringType:
+                if type(sequences) is bytes:
                     # In old versions of Tkinter, bind_class returns a string
                     sequences = root.tk.splitlist(sequences)
 
 		for sequence in sequences:
 		    allSequences[sequence] = None
-	    for sequence in allSequences.keys():
+	    for sequence in list(allSequences.keys()):
 		root.bind_class('EntryFieldPre', sequence, _preProcess)
 		root.bind_class('EntryFieldPost', sequence, _postProcess)
 
@@ -105,9 +105,9 @@ class EntryField(Pmw.MegaWidget):
 
 	while 1:
 	    traversedValidators.append(validator)
-	    if extraValidators.has_key(validator):
+	    if validator in extraValidators:
 		validator = extraValidators[validator][index]
-	    elif _standardValidators.has_key(validator):
+	    elif validator in _standardValidators:
 		validator = _standardValidators[validator][index]
 	    else:
 		return validator
@@ -123,7 +123,7 @@ class EntryField(Pmw.MegaWidget):
 	    'maxstrict' : 1,
 	}
 	opt = self['validate']
-	if type(opt) is types.DictionaryType:
+	if type(opt) is dict:
 	    dict.update(opt)
 	else:
 	    dict['validator'] = opt
@@ -137,7 +137,7 @@ class EntryField(Pmw.MegaWidget):
 
 	# Look up validator maps and replace 'stringtovalue' field
 	# with the corresponding function.
-	if dict.has_key('stringtovalue'):
+	if 'stringtovalue' in dict:
 	    stringtovalue = dict['stringtovalue'] 
 	    strFunction = self._getValidatorFunc(stringtovalue, 1)
 	    self._checkValidateFunction(
@@ -159,10 +159,10 @@ class EntryField(Pmw.MegaWidget):
 	self._validationArgs = args
         self._previousText = None
 
-	if type(dict['min']) == types.StringType and strFunction is not None:
-	    dict['min'] = apply(strFunction, (dict['min'],), args)
-	if type(dict['max']) == types.StringType and strFunction is not None:
-	    dict['max'] = apply(strFunction, (dict['max'],), args)
+	if type(dict['min']) == bytes and strFunction is not None:
+	    dict['min'] = strFunction(*(dict['min'],), **args)
+	if type(dict['max']) == bytes and strFunction is not None:
+	    dict['max'] = strFunction(*(dict['max'],), **args)
 
 	self._checkValidity()
 
@@ -171,15 +171,15 @@ class EntryField(Pmw.MegaWidget):
 
 	if function is not None and not callable(function):
 	    extraValidators = self['extravalidators']
-	    extra = extraValidators.keys()
+	    extra = list(extraValidators.keys())
 	    extra.sort()
 	    extra = tuple(extra)
-	    standard = _standardValidators.keys()
+	    standard = list(_standardValidators.keys())
 	    standard.sort()
 	    standard = tuple(standard)
 	    msg = 'bad %s value "%s":  must be a function or one of ' \
 		'the standard validators %s or extra validators %s'
-	    raise ValueError, msg % (option, validator, standard, extra)
+	    raise ValueError(msg % (option, validator, standard, extra))
 
     def _executeCommand(self, event = None):
 	cmd = self['command']
@@ -232,7 +232,7 @@ class EntryField(Pmw.MegaWidget):
 	args = self._validationArgs
 
 	if dict['validator'] is not None:
-	    status = apply(dict['validator'], (text,), args)
+	    status = dict['validator'](*(text,), **args)
 	    if status != OK:
 		return status
 
@@ -242,7 +242,7 @@ class EntryField(Pmw.MegaWidget):
 	    max = dict['max']
 	    if min is None and max is None:
 		return OK
-	    val = apply(dict['stringtovalue'], (text,), args)
+	    val = dict['stringtovalue'](*(text,), **args)
 	    if min is not None and val < min:
 		if dict['minstrict']:
 		    return ERROR
@@ -329,7 +329,7 @@ class EntryField(Pmw.MegaWidget):
     def setvalue(self, text):
         return self.setentry(text)
 
-Pmw.forwardmethods(EntryField, Tkinter.Entry, '_entryFieldEntry')
+Pmw.forwardmethods(EntryField, tkinter.Entry, '_entryFieldEntry')
 
 # ======================================================================
 
@@ -454,5 +454,5 @@ def _postProcess(event):
 
     # The function specified by the 'command' option may have destroyed
     # the megawidget in a binding earlier in bindtags, so need to check.
-    if _entryCache.has_key(event.widget):
+    if event.widget in _entryCache:
         _entryCache[event.widget]._postProcess()

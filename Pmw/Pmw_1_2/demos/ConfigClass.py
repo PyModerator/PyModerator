@@ -4,23 +4,23 @@ title = 'Component python class configuration demonstration'
 import sys
 sys.path[:0] = ['../../..']
 
-import Tkinter
+import tkinter
 import Pmw
 
-class MyButton(Tkinter.Button):
+class MyButton(tkinter.Button):
     # This is just an ordinary button with special colors.
 
     def __init__(self, master=None, cnf={}, **kw):
 	self.__toggle = 0
 	kw['background'] = 'green'
 	kw['activebackground'] = 'red'
-	apply(Tkinter.Button.__init__, (self, master, cnf), kw)
+	tkinter.Button.__init__(*(self, master, cnf), **kw)
 
 class Demo:
     def __init__(self, parent):
 
 	# Create a title label:
-	label = Tkinter.Label(parent,
+	label = tkinter.Label(parent,
 		text = 'EntryFields with label components of specified type:')
 	label.pack(fill='x', expand=1, padx=10, pady=5)
 
@@ -35,7 +35,7 @@ class Demo:
 
 	entry = Pmw.EntryField(parent,
 		labelpos = 'w',
-		label_pyclass = Tkinter.Button,
+		label_pyclass = tkinter.Button,
 		label_text = 'Button'
 	)
 	entry.pack(fill='x', expand=1, padx=10, pady=5)
@@ -66,11 +66,11 @@ class Demo:
 
 # Create demo in root window for testing.
 if __name__ == '__main__':
-    root = Tkinter.Tk()
+    root = tkinter.Tk()
     Pmw.initialise(root)
     root.title(title)
 
-    exitButton = Tkinter.Button(root, text = 'Exit', command = root.destroy)
+    exitButton = tkinter.Button(root, text = 'Exit', command = root.destroy)
     exitButton.pack(side = 'bottom')
     widget = Demo(root)
     root.mainloop()

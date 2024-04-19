@@ -1,17 +1,17 @@
 # Based on iwidgets2.2.0/tests/combobox.test code. 
 
 
-import Tkinter
+import tkinter
 import Test
 import Pmw
 
 Test.initialise()
 
-if Tkinter.TkVersion >= 8.4:
+if tkinter.TkVersion >= 8.4:
   expected1 = 'TclError: bad relief "bogus": must be '
   expected2 = 'TclError: bad state "bogus": must be ' + \
     'disabled, normal, or readonly'
-elif Tkinter.TkVersion >= 8.3:
+elif tkinter.TkVersion >= 8.3:
   expected1 = 'TclError: bad relief "bogus": must be '
   expected2 = 'TclError: bad state "bogus": must be disabled or normal'
 else:
@@ -104,7 +104,7 @@ tests_1 = (
     'ValueError: bad vscrollmode option "bogus": should be static, dynamic, ' +
 	'or none'),
   ('entry_width', 'bogus', 'TclError: expected integer but got "bogus"'),
-  (c.interior, (), Tkinter.Frame),
+  (c.interior, (), tkinter.Frame),
   (c.setentry, 'This is some text', 1),
   (c.get, (), 'This is some text'),
   (c.get, 2, 'C'),

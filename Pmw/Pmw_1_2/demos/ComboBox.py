@@ -4,7 +4,7 @@ title = 'Pmw.ComboBox demonstration'
 import sys
 sys.path[:0] = ['../../..']
 
-import Tkinter
+import tkinter
 import Pmw
 
 class Demo:
@@ -12,7 +12,7 @@ class Demo:
         parent.configure(background = 'white')
 
         # Create and pack the widget to be configured.
-	self.target = Tkinter.Label(parent,
+	self.target = tkinter.Label(parent,
 		relief = 'sunken',
                 padx = 20,
                 pady = 20,
@@ -55,22 +55,22 @@ class Demo:
 	self.changeColour(first)
 
     def changeColour(self, colour):
-	print 'Colour: ' + colour
+	print('Colour: ' + colour)
 	self.target.configure(background = colour)
 
     def changeText(self, text):
-	print 'Text: ' + text
+	print('Text: ' + text)
 	self.target.configure(text = text)
 
 ######################################################################
 
 # Create demo in root window for testing.
 if __name__ == '__main__':
-    root = Tkinter.Tk()
+    root = tkinter.Tk()
     Pmw.initialise(root)
     root.title(title)
 
-    exitButton = Tkinter.Button(root, text = 'Exit', command = root.destroy)
+    exitButton = tkinter.Button(root, text = 'Exit', command = root.destroy)
     exitButton.pack(side = 'bottom')
     widget = Demo(root)
     root.mainloop()

@@ -3,12 +3,12 @@
 #
 
 import Pmw
-import tkMessageBox
-import tkSimpleDialog
+import tkinter.messagebox
+import tkinter.simpledialog
 import altDialog
 import cliVar
 import string
-from Tkinter import *
+from tkinter import *
 from clientInterfaces import *
 
 sstrip = string.strip
@@ -124,7 +124,7 @@ class ChangePassword(altDialog.AltDialog):
         mID = sstrip(self.moderatorID.get())
         pw1 = self.password1.get()
         pw2 = self.password2.get()
-        if pw1 <> pw2:
+        if pw1 != pw2:
             Oops("Password fields do not match.")
         else:
             rsp = ModeratorChangePW(mID, pw1)

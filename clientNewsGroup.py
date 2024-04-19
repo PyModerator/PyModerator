@@ -4,12 +4,12 @@
 
 import time
 import Pmw
-import tkMessageBox
-import tkSimpleDialog
+import tkinter.messagebox
+import tkinter.simpledialog
 import altDialog
 import cliVar
 import string
-from Tkinter import *
+from tkinter import *
 from clientInterfaces import *
 
 sstrip = string.strip
@@ -37,7 +37,7 @@ def HandleManagedNewsGroup(buttonKey):
     if buttonKey == "Create":
         CreateANewsGroup()
     sels = app.selectNewsGroup.getcurselection()
-    if len(sels) <> 0:
+    if len(sels) != 0:
         if buttonKey == "Edit":
             EditANewsGroup(sels[0])
         elif buttonKey == "Delete":
@@ -79,17 +79,17 @@ def EditANewsGroup(newsGroupID):
             UpdateDisplayList()
 
 def DeleteANewsGroup(newsGroupID):
-    button = tkMessageBox.askquestion("Delete Newsgroup %s" % newsGroupID,
+    button = tkinter.messagebox.askquestion("Delete Newsgroup %s" % newsGroupID,
                 "WARNING! You are about to delete the newsgroup %s.\n"
                 "Are you sure you want to do that??" % newsGroupID)
-    if button <> "yes":
-        tkMessageBox.showinfo("Delete Aborted", "Deletion of %s aborted." %
+    if button != "yes":
+        tkinter.messagebox.showinfo("Delete Aborted", "Deletion of %s aborted." %
                                 newsGroupID)
         return
-    button = tkMessageBox.askquestion("Delete Newsgroup %s" % newsGroupID,
+    button = tkinter.messagebox.askquestion("Delete Newsgroup %s" % newsGroupID,
                 "Are you REALLY sure you want to do that??")
-    if button <> "yes":
-        tkMessageBox.showinfo("Delete Aborted", "Deletion of %s aborted." %
+    if button != "yes":
+        tkinter.messagebox.showinfo("Delete Aborted", "Deletion of %s aborted." %
                                 newsGroupID)
     else:
         NewsGroupDelete(newsGroupID)
@@ -115,7 +115,7 @@ class EditNewsGroupDialog(altDialog.AltDialog):
         self.createTime.setentry(LocalTimeRg(ro.createTime))
         self.creatorModeratorID.setentry(ro.creatorModeratorID)
         self.moderators.deleteall()
-        for moderatorID in cliVar.svr.ro.moderators.keys():
+        for moderatorID in list(cliVar.svr.ro.moderators.keys()):
             self.moderators.add(moderatorID)
             if moderatorID in ro.moderatorIDs:
                 self.moderators.invoke(moderatorID)

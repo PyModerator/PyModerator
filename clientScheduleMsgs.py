@@ -6,7 +6,7 @@ import Pmw
 import altDialog
 import cliVar
 import string
-from Tkinter import *
+from tkinter import *
 from clientInterfaces import *
 
 secsPerDay = 24.0*3600.0
@@ -36,11 +36,11 @@ class ScheduleDialog(altDialog.AltDialog):
 
     def UpdateDisplay(self, msgID = None):
         grp = cliVar.currentNewsGroup
-        self.messageIDs = grp.rw.periodicPosts.keys()
+        self.messageIDs = list(grp.rw.periodicPosts.keys())
         self.messageIDs.sort()
-        self.slistW.setlist(map(str, self.messageIDs))
+        self.slistW.setlist(list(map(str, self.messageIDs)))
         if self.messageIDs:
-            if msgID <> None and msgID in self.messageIDs:
+            if msgID != None and msgID in self.messageIDs:
                 idx = self.messageIDs.index(msgID)
             else:
                 idx = 0
@@ -52,10 +52,10 @@ class ScheduleDialog(altDialog.AltDialog):
         grp = cliVar.currentNewsGroup
         msg = app.messageView.GetMessage()
         if msg:
-            if msg.ro.status <> "Approved":
+            if msg.ro.status != "Approved":
                 return Oops("You may only repeat approved messages.")
             messageID = msg.ro.messageID
-            if not grp.rw.periodicPosts.has_key(messageID):
+            if messageID not in grp.rw.periodicPosts:
                 repeatTime = 30.0*secsPerDay
                 nextSendTime = msg.ro.events[0].ro.timeStamp + repeatTime
                 grp.rw.periodicPosts[messageID] = [ nextSendTime, repeatTime ]
@@ -139,7 +139,7 @@ class ScheduleDialog(altDialog.AltDialog):
             cliVar.app.messageView.DisplayMessage(msg, hdrNotes)
             repeatTime = 30.0*secsPerDay
             nextSendTime = TimeNow() + self.dTime + repeatTime
-            if grp.rw.periodicPosts.has_key(messageID):
+            if messageID in grp.rw.periodicPosts:
                 nextSendTime, repeatTime = grp.rw.periodicPosts[messageID]
             nextSendTimeD = (nextSendTime - TimeNow() - self.dTime)/secsPerDay
             repeatTimeD = repeatTime/secsPerDay

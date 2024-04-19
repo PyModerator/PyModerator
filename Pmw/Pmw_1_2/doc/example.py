@@ -1,4 +1,4 @@
-import Tkinter 
+import tkinter 
 import Pmw
  
 class ThresholdScale(Pmw.MegaWidget):
@@ -24,7 +24,7 @@ class ThresholdScale(Pmw.MegaWidget):
         # Create the indicator component.
         self.indicator = self.createcomponent('indicator',
                 (), None,
-                Tkinter.Frame, interior,
+                tkinter.Frame, interior,
 			width = 16,
 			height = 16,
 			borderwidth = 2,
@@ -34,7 +34,7 @@ class ThresholdScale(Pmw.MegaWidget):
         # Create the scale component.
         self.scale = self.createcomponent('scale',
                 (), None,
-                Tkinter.Scale, interior,
+                tkinter.Scale, interior,
 			command = self._doCommand,
 			tickinterval = 20,
 			length = 200,
@@ -57,7 +57,7 @@ class ThresholdScale(Pmw.MegaWidget):
 	    color = self['colors'][0]
 	self.indicator.configure(background = color)
 
-Pmw.forwardmethods(ThresholdScale, Tkinter.Scale, 'scale')
+Pmw.forwardmethods(ThresholdScale, tkinter.Scale, 'scale')
  
 # Initialise Tkinter and Pmw.
 root = Pmw.initialise()

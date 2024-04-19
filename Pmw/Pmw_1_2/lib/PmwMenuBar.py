@@ -2,7 +2,7 @@
 
 import string
 import types
-import Tkinter
+import tkinter
 import Pmw
 
 class MenuBar(Pmw.MegaWidget):
@@ -73,13 +73,13 @@ class MenuBar(Pmw.MegaWidget):
         self.destroycomponent(menuName + '-menu')
 
     def disableall(self):
-        for menuName in self._menuInfo.keys():
+        for menuName in list(self._menuInfo.keys()):
             if self._menuInfo[menuName][0] is None:
                 menubutton = self.component(menuName + '-button')
                 menubutton.configure(state = 'disabled')
 
     def enableall(self):
-        for menuName in self._menuInfo.keys():
+        for menuName in list(self._menuInfo.keys()):
             if self._menuInfo[menuName][0] is None:
                 menubutton = self.component(menuName + '-button')
                 menubutton.configure(state = 'normal')
@@ -100,24 +100,24 @@ class MenuBar(Pmw.MegaWidget):
             traverseSpec, side, textKey, kw):
 
         if (menuName + '-menu') in self.components():
-            raise ValueError, 'menu "%s" already exists' % menuName
+            raise ValueError('menu "%s" already exists' % menuName)
 
         menukw = {}
-        if kw.has_key('tearoff'):
+        if 'tearoff' in kw:
             menukw['tearoff'] = kw['tearoff']
             del kw['tearoff']
         else:
             menukw['tearoff'] = 0
 
-        if not kw.has_key(textKey):
+        if textKey not in kw:
             kw[textKey] = menuName
 
         self._addHotkeyToOptions(parentMenuName, kw, textKey, traverseSpec)
 
         if parentMenuName is None:
-            button = apply(self.createcomponent, (menuName + '-button',
+            button = self.createcomponent(*(menuName + '-button',
                     (), 'Button',
-                    Tkinter.Menubutton, (self.interior(),)), kw)
+                    tkinter.Menubutton, (self.interior(),)), **kw)
             button.pack(side=side, padx = self['padx'])
             balloon = self['balloon']
             if balloon is not None:
@@ -125,12 +125,12 @@ class MenuBar(Pmw.MegaWidget):
             parentMenu = button
         else:
             parentMenu = self.component(parentMenuName + '-menu')
-            apply(parentMenu.add_cascade, (), kw)
+            parentMenu.add_cascade(*(), **kw)
             self._menuInfo[parentMenuName][1].append(statusHelp)
 
-        menu = apply(self.createcomponent, (menuName + '-menu',
+        menu = self.createcomponent(*(menuName + '-menu',
                 (), 'Menu',
-                Tkinter.Menu, (parentMenu,)), menukw)
+                tkinter.Menu, (parentMenu,)), **menukw)
         if parentMenuName is None:
             button.configure(menu = menu)
         else:
@@ -165,24 +165,24 @@ class MenuBar(Pmw.MegaWidget):
         elif itemType == 'cascade':
             command = menu.add_cascade
         else:
-            raise ValueError, 'unknown menuitem type "%s"' % itemType
+            raise ValueError('unknown menuitem type "%s"' % itemType)
 
         self._menuInfo[menuName][1].append(statusHelp)
-        apply(command, (), kw)
+        command(*(), **kw)
 
     def _addHotkeyToOptions(self, menuName, kw, textKey, traverseSpec):
 
-        if (not self['hotkeys'] or kw.has_key('underline') or
-                not kw.has_key(textKey)):
+        if (not self['hotkeys'] or 'underline' in kw or
+                textKey not in kw):
             return
 
-        if type(traverseSpec) == types.IntType:
+        if type(traverseSpec) == int:
             kw['underline'] = traverseSpec
             return
 
         hotkeyList = []
         if menuName is None:
-            for menuName in self._menuInfo.keys():
+            for menuName in list(self._menuInfo.keys()):
                 if self._menuInfo[menuName][0] is None:
                     menubutton = self.component(menuName + '-button')
                     underline = string.atoi(str(menubutton.cget('underline')))
@@ -209,7 +209,7 @@ class MenuBar(Pmw.MegaWidget):
 
         name = kw[textKey]
 
-        if type(traverseSpec) == types.StringType:
+        if type(traverseSpec) == bytes:
             lowerLetter = string.lower(traverseSpec)
             if traverseSpec in name and lowerLetter not in hotkeyList:
                 kw['underline'] = string.index(name, traverseSpec)

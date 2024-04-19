@@ -1,7 +1,7 @@
 # Tests for Blt widgets.
 
 import os
-import Tkinter
+import tkinter
 import Test
 import Pmw
 
@@ -126,7 +126,7 @@ def _axisCommand(graph, value):
 
 def _createMarkerButton():
     w = Test.currentWidget()
-    button = Tkinter.Button(w, text = 'This is\na button')
+    button = tkinter.Button(w, text = 'This is\na button')
     w.marker_create('window', coords=(10, 200), window=button)
 
 def _axisNamesSorted(pattern = None):

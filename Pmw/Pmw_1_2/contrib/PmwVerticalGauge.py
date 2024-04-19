@@ -16,7 +16,7 @@ Clayton. VIC Australia
 """
 
 import sys
-import Tkinter
+import tkinter
 import Pmw
 import time
 
@@ -61,7 +61,7 @@ class VerticalGauge(Pmw.MegaWidget):
 
 	self.actuallabel = self.createcomponent('actualLabel',
 						(), None,
-						Tkinter.Label, (interior,),
+						tkinter.Label, (interior,),
 						text = '',
 						width = 3,
 						relief = 'sunken',
@@ -72,7 +72,7 @@ class VerticalGauge(Pmw.MegaWidget):
 
 	self.label = self.createcomponent('label',
 					  (), None,
-					  Tkinter.Label, (interior,),
+					  tkinter.Label, (interior,),
 					  text = self['label'],
 					  relief = 'raised',
 					  font = label_font,
@@ -82,7 +82,7 @@ class VerticalGauge(Pmw.MegaWidget):
 
 	self.desiredlabel = self.createcomponent('desiredLabel',
 						 (), None,
-						 Tkinter.Label, (interior,),
+						 tkinter.Label, (interior,),
 						 text = '',
 						 width = 3,
 						 relief = 'sunken',
@@ -93,7 +93,7 @@ class VerticalGauge(Pmw.MegaWidget):
 
 	self.canvas = self.createcomponent('canvas',
 					   (), None,
-					   Tkinter.Canvas, (interior,),
+					   tkinter.Canvas, (interior,),
 					   width = 100,
 					   height = 300,
 					   bg = 'grey')
@@ -217,7 +217,7 @@ class VerticalGauge(Pmw.MegaWidget):
 	self.actuallabel.configure(text = actual)
 
 
-Pmw.forwardmethods(VerticalGauge, Tkinter.Canvas, 'canvas')
+Pmw.forwardmethods(VerticalGauge, tkinter.Canvas, 'canvas')
 
 if __name__ == '__main__':
 
@@ -244,9 +244,9 @@ if __name__ == '__main__':
     g1.grid(sticky = "nsew")
     root.grid_rowconfigure(0, weight = 1)
     root.grid_columnconfigure(0, weight = 1)
-    b1 = Tkinter.Button(text = "Increase", command = increase)
+    b1 = tkinter.Button(text = "Increase", command = increase)
     b1.grid()
-    b2 = Tkinter.Button(text = "Decrease", command = decrease)
+    b2 = tkinter.Button(text = "Decrease", command = decrease)
     b2.grid()
 
     # Let's go.

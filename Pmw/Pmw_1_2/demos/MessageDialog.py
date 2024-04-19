@@ -4,7 +4,7 @@ title = 'Pmw.MessageDialog demonstration'
 import sys
 sys.path[:0] = ['../../..']
 
-import Tkinter
+import tkinter
 import Pmw
 
 class Demo:
@@ -45,25 +45,25 @@ class Demo:
 	self.dialog3.withdraw()
 
 	# Create some buttons to launch the dialogs.
-	w = Tkinter.Button(parent, text = 'Simple dialog',
+	w = tkinter.Button(parent, text = 'Simple dialog',
 	        command = lambda self = self:
 			self.dialog1.activate(geometry = 'first+100+100'))
 	w.pack(padx = 8, pady = 8)
 
-	w = Tkinter.Button(parent, text = 'Bell ringing dialog',
+	w = tkinter.Button(parent, text = 'Bell ringing dialog',
 	        command = self.dialog2.activate)
 	w.pack(padx = 8, pady = 8)
 
-	w = Tkinter.Button(parent, text = 'Vertical buttons',
+	w = tkinter.Button(parent, text = 'Vertical buttons',
 	        command = self.dialog3.activate)
 	w.pack(padx = 8, pady = 8)
 
-	w = Tkinter.Button(parent, text = 'On the fly dialog',
+	w = tkinter.Button(parent, text = 'On the fly dialog',
 	        command = self._createOnTheFly)
 	w.pack(padx = 8, pady = 8)
 
     def execute2(self, result):
-	print 'You clicked on', result
+	print('You clicked on', result)
 	if result is None:
 	    self.dialog2.deactivate(result)
 	elif result == 'Close':
@@ -84,7 +84,7 @@ class Demo:
 	dialog.iconname('Simple message dialog')
 	result = dialog.activate()
 
-	print 'You selected', result
+	print('You selected', result)
 
 
 
@@ -92,11 +92,11 @@ class Demo:
 
 # Create demo in root window for testing.
 if __name__ == '__main__':
-    root = Tkinter.Tk()
+    root = tkinter.Tk()
     Pmw.initialise(root)
     root.title(title)
 
-    exitButton = Tkinter.Button(root, text = 'Exit', command = root.destroy)
+    exitButton = tkinter.Button(root, text = 'Exit', command = root.destroy)
     exitButton.pack(side = 'bottom')
     widget = Demo(root)
     root.mainloop()

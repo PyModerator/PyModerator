@@ -4,14 +4,14 @@ title = 'Pmw.LabeledWidget demonstration'
 import sys
 sys.path[:0] = ['../../..']
 
-import Tkinter
+import tkinter
 import Pmw
 
 class Demo:
     def __init__(self, parent):
 
 	# Create a frame to put the LabeledWidgets into
-	frame = Tkinter.Frame(parent, background = 'grey90')
+	frame = tkinter.Frame(parent, background = 'grey90')
 	frame.pack(fill = 'both', expand = 1)
 
 	# Create and pack the LabeledWidgets.
@@ -23,7 +23,7 @@ class Demo:
 		    label_text = pos + ' label')
 	    lw.component('hull').configure(relief='sunken', borderwidth=2)
 	    lw.grid(column=column, row=row, padx=10, pady=10)
-	    cw = Tkinter.Button(lw.interior(), text='child\nsite')
+	    cw = tkinter.Button(lw.interior(), text='child\nsite')
 	    cw.pack(padx=10, pady=10, expand='yes', fill='both')
 
 	    # Get ready for next grid position.
@@ -36,11 +36,11 @@ class Demo:
 
 # Create demo in root window for testing.
 if __name__ == '__main__':
-    root = Tkinter.Tk()
+    root = tkinter.Tk()
     Pmw.initialise(root)
     root.title(title)
 
     widget = Demo(root)
-    exitButton = Tkinter.Button(root, text = 'Exit', command = root.destroy)
+    exitButton = tkinter.Button(root, text = 'Exit', command = root.destroy)
     exitButton.pack()
     root.mainloop()

@@ -4,7 +4,7 @@ title = 'Pmw.Balloon demonstration'
 import sys
 sys.path[:0] = ['../../..']
 
-import Tkinter
+import tkinter
 import Pmw
 
 class Demo:
@@ -13,7 +13,7 @@ class Demo:
 	self.balloon = Pmw.Balloon(parent)
 
 	# Create some widgets and megawidgets with balloon help.
-	frame = Tkinter.Frame(parent)
+	frame = tkinter.Frame(parent)
 	frame.pack(padx = 10, pady = 5)
 	field = Pmw.EntryField(frame,
 		labelpos = 'nw',
@@ -23,15 +23,15 @@ class Demo:
 	self.balloon.bind(field, 'Command to\nstart/stop',
 		'Enter the shell command to control')
 
-	start = Tkinter.Button(frame, text='Start')
+	start = tkinter.Button(frame, text='Start')
 	start.pack(side='left', padx = 10)
 	self.balloon.bind(start, 'Start the command')
 
-	stop = Tkinter.Button(frame, text='Stop')
+	stop = tkinter.Button(frame, text='Stop')
 	stop.pack(side='left', padx = 10)
 	self.balloon.bind(stop, 'Stop the command')
 
-	self.suicide = Tkinter.Button(frame, text='Kill me soon!',
+	self.suicide = tkinter.Button(frame, text='Kill me soon!',
             command = self.killButton)
 	self.suicide.pack(side='left', padx = 10)
 	self.balloon.bind(self.suicide, 'Watch this button disappear!')
@@ -103,19 +103,19 @@ class Demo:
 		'After 2 seconds\ndelete the tag')
 	text.tag_bind('TAG3', '<ButtonPress>', self._textButtonpress)
 
-	frame = Tkinter.Frame(parent)
+	frame = tkinter.Frame(parent)
 	frame.pack(padx = 10)
-	self.toggleBalloonVar = Tkinter.IntVar()
+	self.toggleBalloonVar = tkinter.IntVar()
 	self.toggleBalloonVar.set(1)
-	toggle = Tkinter.Checkbutton(frame,
+	toggle = tkinter.Checkbutton(frame,
 		variable = self.toggleBalloonVar,
 		text = 'Balloon help', command = self.toggle)
 	toggle.pack(side = 'left', padx = 10)
 	self.balloon.bind(toggle, 'Toggle balloon help\non and off')
 
-	self.toggleStatusVar = Tkinter.IntVar()
+	self.toggleStatusVar = tkinter.IntVar()
 	self.toggleStatusVar.set(1)
-	toggle = Tkinter.Checkbutton(frame,
+	toggle = tkinter.Checkbutton(frame,
 		variable = self.toggleStatusVar,
 		text = 'Status help', command = self.toggle)
 	toggle.pack(side = 'left', padx = 10)
@@ -151,11 +151,11 @@ class Demo:
     def killButton(self):
         # Test for old bug when destroying widgets 1) while the
         # balloon was up and 2) during the initwait period.
-        print 'Destroying button in 2 seconds'
+        print('Destroying button in 2 seconds')
         self.suicide.after(2000, self.suicide.destroy)
 
     def _canvasButtonpress(self, event):
-        print 'Destroying blue circle in 2 seconds'
+        print('Destroying blue circle in 2 seconds')
 	self.canvas.after(2000, self.deleteBlueCircle)
 
     def deleteBlueCircle(self):
@@ -163,7 +163,7 @@ class Demo:
         self.canvas.delete(self.bluecircle)
 
     def _textButtonpress(self, event):
-        print 'Deleting the text tag in 2 seconds'
+        print('Deleting the text tag in 2 seconds')
 	self.text.after(2000, self.deleteTextTag)
 
     def deleteTextTag(self):
@@ -175,11 +175,11 @@ class Demo:
 
 # Create demo in root window for testing.
 if __name__ == '__main__':
-    root = Tkinter.Tk()
+    root = tkinter.Tk()
     Pmw.initialise(root, 12, fontScheme = 'default')
     root.title(title)
 
-    exitButton = Tkinter.Button(root, text = 'Exit', command = root.destroy)
+    exitButton = tkinter.Button(root, text = 'Exit', command = root.destroy)
     exitButton.pack(side = 'bottom')
     widget = Demo(root)
     root.mainloop()

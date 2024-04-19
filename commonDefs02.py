@@ -6,7 +6,7 @@
 import time
 import string
 import nntplib
-import cStringIO
+import io
 
 #------------------------------------------------------------------------------
 # Utility routines used on client and server.
@@ -28,20 +28,20 @@ def PostMessage(outHeaders, outTxt, nntpHost, nntpPort, nntpUser, nntpPassword):
         else:
             nntpDst = nntplib.NNTP(nntpHost, nntpPort)
         msg = ""
-        hdrs = outHeaders.items()
+        hdrs = list(outHeaders.items())
         hdrs.sort()
         for hdr in hdrs:
             msg = "%s%s: %s\n" % (msg, hdr[0][0], hdr[1])
         msg = "%s\n%s" % (msg, outTxt)
-        nntpDst.post(cStringIO.StringIO(msg))
+        nntpDst.post(io.StringIO(msg))
     except (nntplib.error_reply, nntplib.error_temp, nntplib.error_perm,
-            nntplib.error_proto), val:
+            nntplib.error_proto) as val:
         raise CmdError("NNTP error to %s: '%s'" % (nntpHost, val))
 
 def NewMaterial(inTxt):
     # Strip all leading and trailing whitespace from all lines, then
     # remove all blank lines. Put result in inLines.
-    inLines = filter(None, map(string.strip, string.split(inTxt, "\n")))
+    inLines = [_f for _f in map(string.strip, string.split(inTxt, "\n")) if _f]
     newText = totalText = 0.0
     for aline in inLines:
         totalText = totalText + len(aline)
@@ -66,8 +66,8 @@ def Rep(self):
     global indent
     indent = indent + "  "
     cls = self.__class__.__name__
-    args = self.__dict__.items()
-    strArgs = string.join(map(Fmt, args), "\n")
+    args = list(self.__dict__.items())
+    strArgs = string.join(list(map(Fmt, args)), "\n")
     retval = "%s:\n%s\n" % (cls, strArgs)
     indent = indent[:-2]
     return retval

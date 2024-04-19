@@ -32,5 +32,5 @@ def setPmwVersion():
     if version in Pmw.installedversions():
 	Pmw.setversion(version)
     else:
-	print 'No such Pmw version', `version` + '.',
-	print 'Using default version', `Pmw.version()`
+	print('No such Pmw version', repr(version) + '.', end=' ')
+	print('Using default version', repr(Pmw.version()))

@@ -1,5 +1,5 @@
 import types
-import Tkinter
+import tkinter
 import Pmw
 
 class RadioSelect(Pmw.MegaWidget):
@@ -33,7 +33,7 @@ class RadioSelect(Pmw.MegaWidget):
 	else:
 	    self._radioSelectFrame = self.createcomponent('frame',
 		    (), None,
-		    Tkinter.Frame, (interior,))
+		    tkinter.Frame, (interior,))
 	    self._radioSelectFrame.grid(column=2, row=2, sticky='nsew')
 	    interior.grid_columnconfigure(2, weight=1)
 	    interior.grid_rowconfigure(2, weight=1)
@@ -47,22 +47,22 @@ class RadioSelect(Pmw.MegaWidget):
 	elif self['selectmode'] == 'multiple':
 	    self._singleSelect = 0
 	else: 
-	    raise ValueError, 'bad selectmode option "' + \
-		    self['selectmode'] + '": should be single or multiple'
+	    raise ValueError('bad selectmode option "' + \
+		    self['selectmode'] + '": should be single or multiple')
 
 	if self['buttontype'] == 'button':
-	    self.buttonClass = Tkinter.Button
+	    self.buttonClass = tkinter.Button
 	elif self['buttontype'] == 'radiobutton':
 	    self._singleSelect = 1
-	    self.var = Tkinter.StringVar()
-	    self.buttonClass = Tkinter.Radiobutton
+	    self.var = tkinter.StringVar()
+	    self.buttonClass = tkinter.Radiobutton
 	elif self['buttontype'] == 'checkbutton':
 	    self._singleSelect = 0
-	    self.buttonClass = Tkinter.Checkbutton
+	    self.buttonClass = tkinter.Checkbutton
 	else:
-	    raise ValueError, 'bad buttontype option "' + \
+	    raise ValueError('bad buttontype option "' + \
 		    self['buttontype'] + \
-		    '": should be button, radiobutton or checkbutton'
+		    '": should be button, radiobutton or checkbutton')
 
 	if self._singleSelect:
 	    self.selection = None
@@ -70,8 +70,8 @@ class RadioSelect(Pmw.MegaWidget):
 	    self.selection = []
 
 	if self['orient'] not in ('horizontal', 'vertical'):
-	    raise ValueError, 'bad orient option ' + repr(self['orient']) + \
-		': must be either \'horizontal\' or \'vertical\''
+	    raise ValueError('bad orient option ' + repr(self['orient']) + \
+		': must be either \'horizontal\' or \'vertical\'')
 
 	# Check keywords and initialise options.
 	self.initialiseoptions()
@@ -117,24 +117,23 @@ class RadioSelect(Pmw.MegaWidget):
 	# Return the integer index of the button with the given index.
 
 	listLength = len(self._buttonList)
-	if type(index) == types.IntType:
+	if type(index) == int:
 	    if index < listLength:
 		return index
 	    else:
-		raise ValueError, 'index "%s" is out of range' % index
+		raise ValueError('index "%s" is out of range' % index)
 	elif index is Pmw.END:
 	    if listLength > 0:
 		return listLength - 1
 	    else:
-		raise ValueError, 'RadioSelect has no buttons'
+		raise ValueError('RadioSelect has no buttons')
 	else:
 	    for count in range(listLength):
 		name = self._buttonList[count]
 		if index == name:
 		    return count
 	    validValues = 'a name, a number or Pmw.END'
-	    raise ValueError, \
-		    'bad index "%s": must be %s' % (index, validValues)
+	    raise ValueError('bad index "%s": must be %s' % (index, validValues))
 
     def button(self, buttonIndex):
 	name = self._buttonList[self.index(buttonIndex)]
@@ -142,27 +141,27 @@ class RadioSelect(Pmw.MegaWidget):
 
     def add(self, componentName, **kw):
 	if componentName in self._buttonList:
-	    raise ValueError, 'button "%s" already exists' % componentName
+	    raise ValueError('button "%s" already exists' % componentName)
 
 	kw['command'] = \
                 lambda self=self, name=componentName: self.invoke(name)
-	if not kw.has_key('text'):
+	if 'text' not in kw:
 	    kw['text'] = componentName
 
 	if self['buttontype'] == 'radiobutton':
-	    if not kw.has_key('anchor'):
+	    if 'anchor' not in kw:
 		kw['anchor'] = 'w'
-	    if not kw.has_key('variable'):
+	    if 'variable' not in kw:
 		kw['variable'] = self.var
-	    if not kw.has_key('value'):
+	    if 'value' not in kw:
 		kw['value'] = kw['text']
 	elif self['buttontype'] == 'checkbutton':
-	    if not kw.has_key('anchor'):
+	    if 'anchor' not in kw:
 		kw['anchor'] = 'w'
 
-	button = apply(self.createcomponent, (componentName,
+	button = self.createcomponent(*(componentName,
 		(), 'Button',
-		self.buttonClass, (self._radioSelectFrame,)), kw)
+		self.buttonClass, (self._radioSelectFrame,)), **kw)
 
 	if self['orient'] == 'horizontal':
 	    self._radioSelectFrame.grid_rowconfigure(0, weight=1)

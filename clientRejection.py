@@ -5,13 +5,13 @@
 
 import time
 import Pmw
-import tkMessageBox
-import tkSimpleDialog
+import tkinter.messagebox
+import tkinter.simpledialog
 import altDialog
 import cliVar
 import clientEMail
 import string
-from Tkinter import *
+from tkinter import *
 from clientInterfaces import *
 
 sstrip = string.strip
@@ -21,7 +21,7 @@ def UpdateRejectionDisplayList():
     if cliVar.currentNewsGroupID:
         cliVar.currentNewsGroup = NewsGroupGet(cliVar.currentNewsGroupID)
     if cliVar.currentNewsGroup:
-        rejectionIDs = cliVar.currentNewsGroup.ro.rejections.keys()
+        rejectionIDs = list(cliVar.currentNewsGroup.ro.rejections.keys())
     else:
         rejectionIDs = [ ]
     rejectionIDs.sort()
@@ -50,7 +50,7 @@ def RejectSelectedMessage(rejectionID):
             details = clientEMail.SendEMailReply(msg, rejectRW.emailTemplate)
         else:
             details = ""
-        if details <> None:
+        if details != None:
             MessageReject(msg.ro.messageID, rejectionID, details)
             cliVar.currentNewsGroup = NewsGroupGet(cliVar.currentNewsGroupID)
             app.messageLists.UpdateView()
@@ -71,7 +71,7 @@ def HandleManagedRejection(buttonKey):
     if buttonKey == "Create":
         CreateARejection()
     sels = app.selectRejection.getcurselection()
-    if len(sels) <> 0:
+    if len(sels) != 0:
         if buttonKey == "Edit":
             EditARejection(sels[0])
         elif buttonKey == "Delete":
@@ -114,12 +114,12 @@ def EditARejection(rejectionID):
             app.ShowModeratorStatus()
 
 def DeleteARejection(rejectionID):
-    button = tkMessageBox.askquestion("Delete Rejection %s" % rejectionID,
+    button = tkinter.messagebox.askquestion("Delete Rejection %s" % rejectionID,
                 "WARNING!\n"
                 "You are about to delete rejection %s.\n"
                 "Are you sure you want to do that?" % rejectionID)
-    if button <> "yes":
-        tkMessageBox.showinfo("Delete Aborted", "Deletion of %s aborted." %
+    if button != "yes":
+        tkinter.messagebox.showinfo("Delete Aborted", "Deletion of %s aborted." %
                                 rejectionID)
         return
     else:

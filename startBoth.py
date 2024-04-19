@@ -9,17 +9,17 @@ import sys
 import traceback
 
 try:
-    import thread
+    import _thread
     import clientPyModerator
     import serverPyModerator
-    thread.start_new_thread(serverPyModerator.Main, ())
+    _thread.start_new_thread(serverPyModerator.Main, ())
     clientPyModerator.Main()
 except:
-    print sys.exc_info()[0]
-    print sys.exc_info()[1]
+    print(sys.exc_info()[0])
+    print(sys.exc_info()[1])
     traceback.print_tb(sys.exc_info()[2])
-    print "The program was terminated or failed to start properly. Please"
-    print "check your installation and if you continue to have problems,"
-    print "send a copy of the above error information to JamesL@Lugoj.com."
-    raw_input("(Please press enter when you have finished viewing.)")
+    print("The program was terminated or failed to start properly. Please")
+    print("check your installation and if you continue to have problems,")
+    print("send a copy of the above error information to JamesL@Lugoj.com.")
+    input("(Please press enter when you have finished viewing.)")
 

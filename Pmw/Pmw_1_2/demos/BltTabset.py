@@ -4,7 +4,7 @@ title = 'Blt Tabset demonstration'
 import sys
 sys.path[:0] = ['../../..']
 
-import Tkinter
+import tkinter
 import Pmw
 
 class Demo:
@@ -13,7 +13,7 @@ class Demo:
 	    message = 'Sorry\nThe BLT package has not been\n' + \
 		    'installed on this system.\n' + \
 		    'Please install it and try again.'
-	    w = Tkinter.Label(parent, text = message)
+	    w = tkinter.Label(parent, text = message)
 	    w.pack(padx = 8, pady = 8)
 	    return
 
@@ -27,7 +27,7 @@ class Demo:
         self.tabset.configure(selectbackground = background,
                 tabbackground = background, activebackground = background)
 
-        configurePanel = Tkinter.Frame(self.tabset)
+        configurePanel = tkinter.Frame(self.tabset)
         sideMenu = Pmw.OptionMenu (configurePanel,
                 labelpos = 'w',
                 label_text = 'Side:',
@@ -50,8 +50,8 @@ class Demo:
         rotateMenu.selectitem(0)
         self.rotateText('0')
 
-        self.appearancePanel = Tkinter.Label(self.tabset)
-        helpersPanel = Tkinter.Button(self.tabset,
+        self.appearancePanel = tkinter.Label(self.tabset)
+        helpersPanel = tkinter.Button(self.tabset,
                 text = 'This is a lot\nof help!')
 
         self.tabset.insert('end',
@@ -91,11 +91,11 @@ class Demo:
 
 # Create demo in root window for testing.
 if __name__ == '__main__':
-    root = Tkinter.Tk()
+    root = tkinter.Tk()
     Pmw.initialise(root)
     root.title(title)
 
-    exitButton = Tkinter.Button(root, text = 'Exit', command = root.destroy)
+    exitButton = tkinter.Button(root, text = 'Exit', command = root.destroy)
     exitButton.pack(side = 'bottom')
     widget = Demo(root)
     root.mainloop()

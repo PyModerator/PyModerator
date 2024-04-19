@@ -7,7 +7,7 @@ sys.path[:0] = ['../../..']
 import string
 import time
 import types
-import Tkinter
+import tkinter
 import Pmw
 
 class SpecialEntry(Pmw.EntryField):
@@ -15,7 +15,7 @@ class SpecialEntry(Pmw.EntryField):
     def __init__(self, parent=None , **kw):
 
         kw['extravalidators'] = _myValidators
-	apply(Pmw.EntryField.__init__, (self, parent), kw)
+	Pmw.EntryField.__init__(*(self, parent), **kw)
 	self._converter = None
 
     def setentry(self, text):
@@ -23,18 +23,18 @@ class SpecialEntry(Pmw.EntryField):
 	# the appropriate converter.
 
 	val = self['validate']
-	if type(val) == types.DictionaryType:
+	if type(val) == dict:
 	    val = val['validator']
-	if _converters.has_key(val):
+	if val in _converters:
 	    text = _converters[val](text, output = 0)
 	Pmw.EntryField.setentry(self, text)
 
     def getentry(self):
 	text = self.get()
 	val = self['validate']
-	if type(val) == types.DictionaryType:
+	if type(val) == dict:
 	    val = val['validator']
-	if _converters.has_key(val):
+	if val in _converters:
 	    return _converters[val](text, output = 1)
 	else:
 	    return text
@@ -142,15 +142,15 @@ class Demo:
 	self._any.component('entry').focus_set()
 
     def changed(self):
-	print 'Text changed, converted value is', self._date.getentry()
+	print('Text changed, converted value is', self._date.getentry())
 
     def execute(self):
-	print 'Return pressed, value is', self._any.get()
+	print('Return pressed, value is', self._any.get())
 
     # This implements a custom validation routine.  It simply checks
     # if the string is of odd length.
     def custom_validate(self, text):
-	print 'text:', text
+	print('text:', text)
 	if len(text) % 2 == 0:
 	  return -1
 	else:
@@ -160,11 +160,11 @@ class Demo:
 
 # Create demo in root window for testing.
 if __name__ == '__main__':
-    root = Tkinter.Tk()
+    root = tkinter.Tk()
     Pmw.initialise(root)
     root.title(title)
 
-    exitButton = Tkinter.Button(root, text = 'Exit', command = root.destroy)
+    exitButton = tkinter.Button(root, text = 'Exit', command = root.destroy)
     exitButton.pack(side = 'bottom')
     widget = Demo(root)
     root.mainloop()

@@ -1,4 +1,4 @@
-import Tkinter
+import tkinter
 import Test
 import Pmw
 
@@ -25,7 +25,7 @@ tests_1 = (
   ('label_image', ''),
   ('label_bitmap', ''),
   (c.title, 'SelectionDialog 1: new title', ''),
-  (c.interior, (), Tkinter.Frame),
+  (c.interior, (), tkinter.Frame),
   ('defaultbutton', 'OK'), 
   (c.delete, (0, 'end')),
   (c.get, (0, 'end'), ()),

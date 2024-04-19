@@ -4,14 +4,14 @@ title = 'Pmw.OptionMenu demonstration'
 import sys
 sys.path[:0] = ['../../..']
 
-import Tkinter
+import tkinter
 import Pmw
 
 class Demo:
     def __init__(self, parent):
 	# Create and pack the OptionMenu megawidgets.
 	# The first one has a textvariable.
-	self.var = Tkinter.StringVar()
+	self.var = tkinter.StringVar()
 	self.var.set('steamed')
 	self.method_menu = Pmw.OptionMenu(parent,
 		labelpos = 'w',
@@ -45,8 +45,8 @@ class Demo:
 
     def _printOrder(self, vege):
 	# Can use 'self.var.get()' instead of 'getcurselection()'.
-	print 'You have chosen %s %s.' % \
-            (self.method_menu.getcurselection(), vege)
+	print('You have chosen %s %s.' % \
+            (self.method_menu.getcurselection(), vege))
 
     def _changeDirection(self, direction):
 	for menu in (self.method_menu, self.vege_menu, self.direction_menu):
@@ -56,11 +56,11 @@ class Demo:
 
 # Create demo in root window for testing.
 if __name__ == '__main__':
-    root = Tkinter.Tk()
+    root = tkinter.Tk()
     Pmw.initialise(root)
     root.title(title)
 
-    exitButton = Tkinter.Button(root, text = 'Exit', command = root.destroy)
+    exitButton = tkinter.Button(root, text = 'Exit', command = root.destroy)
     exitButton.pack(side = 'bottom')
     widget = Demo(root)
     root.mainloop()

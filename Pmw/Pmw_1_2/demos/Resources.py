@@ -5,7 +5,7 @@ import sys
 sys.path[:0] = ['../../..']
 
 import string
-import Tkinter
+import tkinter
 import Pmw
 
 info = """
@@ -34,12 +34,12 @@ class DemoClass(Pmw.MegaWidget):
 	Pmw.MegaWidget.__init__(self, parent)
 
 	interior = self.interior()
-	listbox = Tkinter.Listbox(interior, height = 12, width = 40)
+	listbox = tkinter.Listbox(interior, height = 12, width = 40)
 	listbox.pack(fill='both', expand='yes')
 	for line in string.split(info, '\n'):
 	    listbox.insert('end', line)
 
-	entry = Tkinter.Entry(interior)
+	entry = tkinter.Entry(interior)
 	entry.pack(fill='y')
 	entry.insert(0, 'Hello, World!')
 
@@ -64,11 +64,11 @@ class Demo:
 
 # Create demo in root window for testing.
 if __name__ == '__main__':
-    root = Tkinter.Tk()
+    root = tkinter.Tk()
     Pmw.initialise(root)
     root.title(title)
 
-    exitButton = Tkinter.Button(root, text = 'Exit', command = root.destroy)
+    exitButton = tkinter.Button(root, text = 'Exit', command = root.destroy)
     exitButton.pack(side = 'bottom')
     widget = Demo(root)
     root.mainloop()

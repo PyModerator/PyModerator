@@ -8,7 +8,7 @@ import cliVar
 import string
 import smtplib
 import sys
-from Tkinter import *
+from tkinter import *
 from clientInterfaces import *
 
 sstrip = string.strip
@@ -28,7 +28,7 @@ def SendEMailReply(message, otherText):
                 toLine = ""
         subjectLine = message.rw.inHeaders.get(("Subject", 0))
         if subjectLine:
-            if string.lower(subjectLine[:3]) <> "re:":
+            if string.lower(subjectLine[:3]) != "re:":
                 subjectLine = "Re: " + subjectLine
         else:
             subjectLine = ""
@@ -44,10 +44,10 @@ def SendEMailReply(message, otherText):
     dialog = app.emailDialog
     dialog.SetFields(fromAddr, toLine, subjectLine, bodyLines)
     buttonSelect = dialog.GetInput()
-    if buttonSelect <> "OK":
+    if buttonSelect != "OK":
         return None
-    allAddrs = filter(None, map(string.strip,
-                string.split(dialog.toLine + "," + dialog.bccLine, ",")))
+    allAddrs = [_f for _f in map(string.strip,
+                string.split(dialog.toLine + "," + dialog.bccLine, ",")) if _f]
     msgBody = string.join(WordWrap(string.split(dialog.bodyLines, "\n")), "\n")
     outHeaders = { ("From", 0): dialog.fromLine, ("To", 0): dialog.toLine,
                     ("Subject", 0): dialog.subjectLine }

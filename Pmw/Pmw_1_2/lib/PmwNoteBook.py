@@ -1,6 +1,6 @@
 import string
 import types
-import Tkinter
+import tkinter
 import Pmw
 
 class NoteBook(Pmw.MegaArchetype):
@@ -23,15 +23,14 @@ class NoteBook(Pmw.MegaArchetype):
 	self.defineoptions(kw, optiondefs, dynamicGroups = ('Page', 'Tab'))
 
 	# Initialise the base class (after defining the options).
-	Pmw.MegaArchetype.__init__(self, parent, Tkinter.Canvas)
+	Pmw.MegaArchetype.__init__(self, parent, tkinter.Canvas)
 
         self.bind('<Map>', self._handleMap)
         self.bind('<Configure>', self._handleConfigure)
 
         tabpos = self['tabpos']
 	if tabpos is not None and tabpos != 'n':
-            raise ValueError, \
-                'bad tabpos option %s:  should be n or None' % repr(tabpos)
+            raise ValueError('bad tabpos option %s:  should be n or None' % repr(tabpos))
         self._withTabs = (tabpos is not None)
         self._pageMargin = self['pagemargin']
         self._borderWidth = self['borderwidth']
@@ -121,9 +120,9 @@ class NoteBook(Pmw.MegaArchetype):
 	self.initialiseoptions()
 
     def insert(self, pageName, before = 0, **kw):
-	if self._pageAttrs.has_key(pageName):
+	if pageName in self._pageAttrs:
 	    msg = 'Page "%s" already exists.' % pageName
-	    raise ValueError, msg
+	    raise ValueError(msg)
 
         # Do this early to catch bad <before> spec before creating any items.
 	beforeIndex = self.index(before, 1)
@@ -137,7 +136,7 @@ class NoteBook(Pmw.MegaArchetype):
             }
 
         # Divide the keyword options into the 'page_' and 'tab_' options.
-        for key in kw.keys():
+        for key in list(kw.keys()):
             if key[:5] == 'page_':
                 pageOptions[key[5:]] = kw[key]
                 del kw[key]
@@ -145,12 +144,12 @@ class NoteBook(Pmw.MegaArchetype):
                 tabOptions[key[4:]] = kw[key]
                 del kw[key]
             else:
-		raise KeyError, 'Unknown option "' + key + '"'
+		raise KeyError('Unknown option "' + key + '"')
 
         # Create the frame to contain the page.
-	page = apply(self.createcomponent, (pageName,
+	page = self.createcomponent(*(pageName,
 		(), 'Page',
-		Tkinter.Frame, self._hull), pageOptions)
+		tkinter.Frame, self._hull), **pageOptions)
 
         attributes = {}
         attributes['page'] = page
@@ -161,9 +160,9 @@ class NoteBook(Pmw.MegaArchetype):
             def raiseThisPage(self = self, pageName = pageName):
                 self.selectpage(pageName)
             tabOptions['command'] = raiseThisPage
-            tab = apply(self.createcomponent, (pageName + '-tab',
+            tab = self.createcomponent(*(pageName + '-tab',
                     (), 'Tab',
-                    Tkinter.Button, self._hull), tabOptions)
+                    tkinter.Button, self._hull), **tabOptions)
 
             if self['arrownavigation']:
                 # Allow the use of the arrow keys for Tab navigation:
@@ -201,7 +200,7 @@ class NoteBook(Pmw.MegaArchetype):
         return page
   		
     def add(self, pageName, **kw):
-        return apply(self.insert, (pageName, len(self._pageNames)), kw)
+        return self.insert(*(pageName, len(self._pageNames)), **kw)
 
     def delete(self, *pageNames):
         newTopPage = 0
@@ -227,7 +226,7 @@ class NoteBook(Pmw.MegaArchetype):
                                 
             if self._withTabs:
                 self.destroycomponent(pageName + '-tab')
-                apply(self._hull.delete, pageInfo['tabitems'])
+                self._hull.delete(*pageInfo['tabitems'])
             self.destroycomponent(pageName)
             del self._pageAttrs[pageName]
             del self._pageNames[pageIndex]
@@ -250,7 +249,7 @@ class NoteBook(Pmw.MegaArchetype):
 	return list(self._pageNames)
 
     def getcurselection(self):
-        if self._pending.has_key('topPage'):
+        if 'topPage' in self._pending:
             return self._pending['topPage']
         else:
             return self._topPageName
@@ -264,30 +263,29 @@ class NoteBook(Pmw.MegaArchetype):
 
     def index(self, index, forInsert = 0):
 	listLength = len(self._pageNames)
-	if type(index) == types.IntType:
+	if type(index) == int:
 	    if forInsert and index <= listLength:
 		return index
 	    elif not forInsert and index < listLength:
 		return index
 	    else:
-		raise ValueError, 'index "%s" is out of range' % index
+		raise ValueError('index "%s" is out of range' % index)
 	elif index is Pmw.END:
 	    if forInsert:
 		return listLength
 	    elif listLength > 0:
 		return listLength - 1
 	    else:
-		raise ValueError, 'NoteBook has no pages'
+		raise ValueError('NoteBook has no pages')
 	elif index is Pmw.SELECT:
 	    if listLength == 0:
-		raise ValueError, 'NoteBook has no pages'
+		raise ValueError('NoteBook has no pages')
             return self._pageNames.index(self.getcurselection())
 	else:
             if index in self._pageNames:
                 return self._pageNames.index(index)
 	    validValues = 'a name, a number, Pmw.END or Pmw.SELECT'
-	    raise ValueError, \
-                'bad index "%s": must be %s' % (index, validValues)
+	    raise ValueError('bad index "%s": must be %s' % (index, validValues))
 
     def selectpage(self, page):
         pageName = self._pageNames[self.index(page)]
@@ -344,7 +342,7 @@ class NoteBook(Pmw.MegaArchetype):
 
         if self._withTabs:
             maxTabHeight = 0
-            for pageInfo in self._pageAttrs.values():
+            for pageInfo in list(self._pageAttrs.values()):
                 if maxTabHeight < pageInfo['tabreqheight']:
                     maxTabHeight = pageInfo['tabreqheight']
             height = height + maxTabHeight + self._borderWidth * 1.5
@@ -419,18 +417,18 @@ class NoteBook(Pmw.MegaArchetype):
             self.tabBottom = canvasBorder
         oldTabBottom = self.tabBottom
 
-        if self._pending.has_key('borderColor'):
+        if 'borderColor' in self._pending:
             self._lightBorderColor, self._darkBorderColor = \
                     Pmw.Color.bordercolors(self, self['hull_background'])
 
         # Draw all the tabs.
-        if self._withTabs and (self._pending.has_key('tabs') or
-                self._pending.has_key('size')):
+        if self._withTabs and ('tabs' in self._pending or
+                'size' in self._pending):
             # Find total requested width and maximum requested height
             # of tabs.
             sumTabReqWidth = 0
             maxTabHeight = 0
-            for pageInfo in self._pageAttrs.values():
+            for pageInfo in list(self._pageAttrs.values()):
                 sumTabReqWidth = sumTabReqWidth + pageInfo['tabreqwidth']
                 if maxTabHeight < pageInfo['tabreqheight']:
                     maxTabHeight = pageInfo['tabreqheight']
@@ -499,8 +497,8 @@ class NoteBook(Pmw.MegaArchetype):
 
         # Redraw shadow under tabs so that it appears that tab for old
         # top page is lowered and that tab for new top page is raised.
-        if self._withTabs and (self._pending.has_key('topPage') or
-                self._pending.has_key('tabs') or self._pending.has_key('size')):
+        if self._withTabs and ('topPage' in self._pending or
+                'tabs' in self._pending or 'size' in self._pending):
 
             if self.getcurselection() is None:
                 # No pages, so draw line across top of page area.
@@ -541,7 +539,7 @@ class NoteBook(Pmw.MegaArchetype):
             self.tag_raise(self._pageTop2Border)
 
         # Position the page border shadows.
-        if self._pending.has_key('size') or oldTabBottom != self.tabBottom:
+        if 'size' in self._pending or oldTabBottom != self.tabBottom:
 
             self.coords(self._pageLeftBorder,
                 canvasBorder, self.tabBottom,
@@ -574,7 +572,7 @@ class NoteBook(Pmw.MegaArchetype):
                     )
 
         # Color borders.
-        if self._pending.has_key('borderColor'):
+        if 'borderColor' in self._pending:
             self.itemconfigure('lighttag', fill = self._lightBorderColor)
             self.itemconfigure('darktag', fill = self._darkBorderColor)
 
@@ -601,7 +599,7 @@ class NoteBook(Pmw.MegaArchetype):
         #      page (eg:  initially or when all pages deleted).
         #   3) tab height has changed, due to difference in the height of a tab
         if (newTopPage is not None or \
-                self._pending.has_key('size') and self._topPageName is not None
+                'size' in self._pending and self._topPageName is not None
                 or oldTabBottom != self.tabBottom):
             self.itemconfigure(self._topPageItem,
                 width = hullWidth - 2 * canvasBorder - pageBorder * 2,
@@ -614,4 +612,4 @@ class NoteBook(Pmw.MegaArchetype):
 # Need to do forwarding to get the pack, grid, etc methods. 
 # Unfortunately this means that all the other canvas methods are also
 # forwarded.
-Pmw.forwardmethods(NoteBook, Tkinter.Canvas, '_hull')
+Pmw.forwardmethods(NoteBook, tkinter.Canvas, '_hull')

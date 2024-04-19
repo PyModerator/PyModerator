@@ -4,12 +4,12 @@
 
 import time
 import Pmw
-import tkMessageBox
-import tkSimpleDialog
+import tkinter.messagebox
+import tkinter.simpledialog
 import altDialog
 import cliVar
 import string
-from Tkinter import *
+from tkinter import *
 from clientInterfaces import *
 
 sstrip = string.strip
@@ -19,7 +19,7 @@ def UpdateDisplayList():
     if svr:
         cliVar.svr = svr
         app = cliVar.app
-        moderatorIDs = svr.ro.moderators.keys()
+        moderatorIDs = list(svr.ro.moderators.keys())
         moderatorIDs.sort()
         app.UpdateModerateMenu()
         app.ShowModeratorStatus()
@@ -37,7 +37,7 @@ def HandleManagedModerator(buttonKey):
     if buttonKey == "Create":
         CreateAModerator()
     sels = app.selectModerator.getcurselection()
-    if len(sels) <> 0:
+    if len(sels) != 0:
         if buttonKey == "Edit":
             EditAModerator(sels[0])
         elif buttonKey == "Delete":
@@ -80,24 +80,24 @@ def EditAModerator(moderatorID):
         if rsp == None:
             newNewsGroupIDs = list(moderator.ro.newsGroupIDs)
             newNewsGroupIDs.sort()
-            if oldNewsGroupIDs <> newNewsGroupIDs:
+            if oldNewsGroupIDs != newNewsGroupIDs:
                 for newsGroupID in cliVar.svr.ro.newsGroupIDs:
                     if newsGroupID in oldNewsGroupIDs:
                         if newsGroupID not in newNewsGroupIDs:
                             DelModeratorFromNewsGroup(moderatorID, newsGroupID)
                     elif newsGroupID in newNewsGroupIDs:
                         AddModeratorToNewsGroup(moderatorID, newsGroupID)
-            if olduserType <> moderator.ro.userType:
+            if olduserType != moderator.ro.userType:
                 ModeratorChangeType(moderatorID, moderator.ro.userType)
             UpdateDisplayList()
 
 def DeleteAModerator(moderatorID):
-    button = tkMessageBox.askquestion("Delete Moderator %s" % moderatorID,
+    button = tkinter.messagebox.askquestion("Delete Moderator %s" % moderatorID,
                 "WARNING!\n"
                 "You are about to delete moderator %s.\n"
                 "Are you sure you want to do that??" % moderatorID)
-    if button <> "yes":
-        tkMessageBox.showinfo("Delete Aborted", "Deletion of %s aborted." %
+    if button != "yes":
+        tkinter.messagebox.showinfo("Delete Aborted", "Deletion of %s aborted." %
                                 moderatorID)
         return
     else:

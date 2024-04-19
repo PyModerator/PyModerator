@@ -1,4 +1,4 @@
-import Tkinter
+import tkinter
 import Pmw
 
 class LabeledWidget(Pmw.MegaWidget):
@@ -20,7 +20,7 @@ class LabeledWidget(Pmw.MegaWidget):
 	interior = Pmw.MegaWidget.interior(self)
 	self._labelChildSite = self.createcomponent('labelchildsite',
 		(), None,
-		Tkinter.Frame, (interior,))
+		tkinter.Frame, (interior,))
 	self._labelChildSite.grid(column=2, row=2, sticky=self['sticky'])
 	interior.grid_columnconfigure(2, weight=1)
 	interior.grid_rowconfigure(2, weight=1)

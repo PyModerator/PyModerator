@@ -2,11 +2,11 @@
 # This are the client side functions that communicate requests to the server.
 #
 
-import cPickle
-import tkMessageBox
+import pickle
+import tkinter.messagebox
 import cliVar
 import struct
-import cStringIO
+import io
 from commonDefs import *
 
 #------------------------------------------------------------------------------
@@ -15,10 +15,10 @@ def Oops(err):
         msg = err.details
     else:
         msg = err
-    tkMessageBox.showerror("Error", msg)
+    tkinter.messagebox.showerror("Error", msg)
     return None
 
-cmdFile = cStringIO.StringIO()
+cmdFile = io.StringIO()
 
 #------------------------------------------------------------------------------
 def ReadSock(num):
@@ -42,7 +42,7 @@ def DoCommand(cmd, args):
         cmdFile.reset()
         cmdFile.truncate()
         cmdFile.write(cmd + "\n")
-        cPickle.dump(args, cmdFile, 1)
+        pickle.dump(args, cmdFile, 1)
         cmdBuf = cmdFile.getvalue()
         cmdLen = struct.pack(">l", len(cmdBuf))
         cliVar.sockFile.write(cmdLen)
@@ -50,7 +50,7 @@ def DoCommand(cmd, args):
         cliVar.sockFile.flush()
         # Ignore the rspLen for now. May use it later for async operation.
         rspLen = struct.unpack(">l", ReadSock(4))[0]
-        rsp = cPickle.load(cliVar.sockFile)
+        rsp = pickle.load(cliVar.sockFile)
     except IOError:
         cliVar.sockFile = None
         cliVar.app.busyEnd()

@@ -1,6 +1,6 @@
 # Based on iwidgets2.2.0/tests/scrolledlistbox.test code.
 
-import Tkinter
+import tkinter
 import Test
 import Pmw
 

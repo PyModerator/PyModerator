@@ -4,7 +4,7 @@ title = 'Pmw.TextDialog demonstration'
 import sys
 sys.path[:0] = ['../../..']
 
-import Tkinter
+import tkinter
 import Pmw
 
 class Demo:
@@ -19,7 +19,7 @@ class Demo:
 	dialog.configure(text_state = 'disabled')
 
 	# Create button to launch the dialog.
-	w = Tkinter.Button(parent, text = 'Show text dialog',
+	w = tkinter.Button(parent, text = 'Show text dialog',
 	        command = dialog.activate)
 	w.pack(padx = 8, pady = 8)
 
@@ -65,11 +65,11 @@ A. One's a slimy scum-sucking scavenger, the other is just a fish.
 
 # Create demo in root window for testing.
 if __name__ == '__main__':
-    root = Tkinter.Tk()
+    root = tkinter.Tk()
     Pmw.initialise(root)
     root.title(title)
 
-    exitButton = Tkinter.Button(root, text = 'Exit', command = root.destroy)
+    exitButton = tkinter.Button(root, text = 'Exit', command = root.destroy)
     exitButton.pack(side = 'bottom')
     widget = Demo(root)
     root.mainloop()

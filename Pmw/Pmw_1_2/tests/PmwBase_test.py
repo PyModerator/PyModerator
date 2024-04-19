@@ -1,6 +1,6 @@
 # Tests for Pmw megawidgets
 
-import Tkinter
+import tkinter
 import Test
 import Pmw
 
@@ -20,7 +20,7 @@ class TestWidget(Pmw.MegaWidget):
 	interior = self.interior()
 	self._label = self.createcomponent('label',
 		(), None,
-		Tkinter.Label, (interior,), text = 'test')
+		tkinter.Label, (interior,), text = 'test')
 	self._label.pack(side='left', padx=2)
 
         # Check keywords and initialise options.
@@ -35,7 +35,7 @@ class TestWidget(Pmw.MegaWidget):
 	w = self.createcomponent('test',
 		(), None,
 		widget, (self.interior(),))
-	apply(self.configure, (), {'test_' + option : value})
+	self.configure(*(), **{'test_' + option : value})
 	if w.__class__.__name__ not in ('Menu', 'Toplevel'):
 	    w.pack()
 	if hasattr(widget, 'geometry'):
@@ -73,7 +73,7 @@ class TestComponent(Pmw.MegaWidget):
 	interior = self.interior()
 	self._label = self.createcomponent('label',
 		(), None,
-		Tkinter.Label, (interior,), text = 'test')
+		tkinter.Label, (interior,), text = 'test')
 	self._label.pack(side='left', padx=2)
 
 	self._statusList = []
@@ -129,14 +129,14 @@ tests = (
 )
 
 # Test each of the standard widgets as components.
-for widget in [Tkinter.Button, Tkinter.Checkbutton, Tkinter.Entry, Tkinter.Label, Tkinter.Listbox, \
-  Tkinter.Menu, Tkinter.Menubutton, Tkinter.Message, Tkinter.Radiobutton, Tkinter.Scale, Tkinter.Text]:
+for widget in [tkinter.Button, tkinter.Checkbutton, tkinter.Entry, tkinter.Label, tkinter.Listbox, \
+  tkinter.Menu, tkinter.Menubutton, tkinter.Message, tkinter.Radiobutton, tkinter.Scale, tkinter.Text]:
     tests = tests + (
       (c.addTestWidget, (widget, 'foreground', 'blue'), 'blue'),
       (c.deleteTestWidget, ())
     )
 
-for widget in [Tkinter.Canvas, Tkinter.Frame, Tkinter.Scrollbar, Tkinter.Toplevel]:
+for widget in [tkinter.Canvas, tkinter.Frame, tkinter.Scrollbar, tkinter.Toplevel]:
     tests = tests + (
       (c.addTestWidget, (widget, 'background', 'grey80'), 'grey80'),
       (c.deleteTestWidget, ())
@@ -169,7 +169,7 @@ fontList = (
 )
 
 for args, dict in fontList:
-    font = apply(Pmw.logicalfont, args, dict)
+    font = Pmw.logicalfont(*args, **dict)
     tests = tests + (
         ('label_text', 'Testing font\n' + str(args) + '\n' + str(dict)),
         ('label_font', font),

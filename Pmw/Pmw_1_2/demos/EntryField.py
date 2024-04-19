@@ -5,7 +5,7 @@ import sys
 sys.path[:0] = ['../../..']
 
 import time
-import Tkinter
+import tkinter
 import Pmw
 
 class Demo:
@@ -70,15 +70,15 @@ class Demo:
 	self._any.component('entry').focus_set()
 
     def changed(self):
-	print 'Text changed, value is', self._real.getvalue()
+	print('Text changed, value is', self._real.getvalue())
 
     def execute(self):
-	print 'Return pressed, value is', self._any.getvalue()
+	print('Return pressed, value is', self._any.getvalue())
 
     # This implements a custom validation routine.  It simply checks
     # if the string is of odd length.
     def custom_validate(self, text):
-	print 'text:', text
+	print('text:', text)
 	if len(text) % 2 == 0:
 	  return -1
 	else:
@@ -88,11 +88,11 @@ class Demo:
 
 # Create demo in root window for testing.
 if __name__ == '__main__':
-    root = Tkinter.Tk()
+    root = tkinter.Tk()
     Pmw.initialise(root)
     root.title(title)
 
-    exitButton = Tkinter.Button(root, text = 'Exit', command = root.destroy)
+    exitButton = tkinter.Button(root, text = 'Exit', command = root.destroy)
     exitButton.pack(side = 'bottom')
     widget = Demo(root)
     root.mainloop()

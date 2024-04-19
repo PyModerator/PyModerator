@@ -5,16 +5,16 @@ import sys
 sys.path[:0] = ['../../..']
 
 import string
-import Tkinter
+import tkinter
 import Pmw
 
 class Demo:
     def __init__(self, parent):
-	parent = Tkinter.Frame(parent)
+	parent = tkinter.Frame(parent)
 	parent.pack(padx=10, pady=10, fill='both', expand=1)
 	self.width = 350
 	self.height = 250
-	self.canvas = Tkinter.Canvas(parent,
+	self.canvas = tkinter.Canvas(parent,
 		width = self.width, height = self.height)
 	self.canvas.grid(row = 0, column = 0, columnspan = 2, sticky = 'news')
 
@@ -156,11 +156,11 @@ class Demo:
 
 # Create demo in root window for testing.
 if __name__ == '__main__':
-    root = Tkinter.Tk()
+    root = tkinter.Tk()
     Pmw.initialise(root)
     root.title(title)
 
-    exitButton = Tkinter.Button(root, text = 'Exit', command = root.destroy)
+    exitButton = tkinter.Button(root, text = 'Exit', command = root.destroy)
     exitButton.pack(side = 'bottom')
     widget = Demo(root)
     root.mainloop()

@@ -1,13 +1,13 @@
 # Based on iwidgets2.2.0/tests/dialog.test code.   
 
 import sys
-import Tkinter
+import tkinter
 import Test
 import Pmw
 
 Test.initialise()
 
-if Tkinter.TkVersion >= 8.3:
+if tkinter.TkVersion >= 8.3:
   version = sys.version_info
   if version[0] > 2 or (version[0] == 2 and version[1] > 0):
       expected1 = "AttributeError: Dialog instance has no attribute 'bogus'"
@@ -21,7 +21,7 @@ c = Pmw.Dialog
 def _addListbox():
     global _lb
     w = Test.currentWidget()
-    _lb = Tkinter.Listbox(w.interior(), relief = 'sunken')
+    _lb = tkinter.Listbox(w.interior(), relief = 'sunken')
     _lb.pack(fill = 'both', expand = 'yes')
 
 def _addListEntry(text):
@@ -36,16 +36,16 @@ def _createOtherToplevel():
     global tempToplevel
     Test.root.deiconify()
     Test.root.geometry('+0+0')
-    tempToplevel = Tkinter.Toplevel()
+    tempToplevel = tkinter.Toplevel()
     tempToplevel.geometry('+0+0')
-    label = Tkinter.Label(tempToplevel, text =
+    label = tkinter.Label(tempToplevel, text =
         'The cursor should turn to a\n' +
         'clock over this window if the\n' +
 	'blt busy command is available.\n' +
 	'In any case, the button will be inactive\n' +
 	'while the modal dialog is active.')
     label.pack(padx=100, pady=100)
-    button = Tkinter.Button(tempToplevel, text = 'Try to press me')
+    button = tkinter.Button(tempToplevel, text = 'Try to press me')
     button.pack(pady=100, expand=1)
 
 def _hideOtherToplevel():
@@ -71,7 +71,7 @@ tests_1 = (
   ('buttons', ('A', 'B', 'C', 'D')),
   ('hull_cursor', 'gumby'),
   (c.title, 'Dialog Shell', ''),
-  (c.interior, (), Tkinter.Frame),
+  (c.interior, (), tkinter.Frame),
   ('buttons', ()),
   ('buttons', ('OK',)),
   ('buttons', ('OK', 'Cancel')),

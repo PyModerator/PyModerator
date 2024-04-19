@@ -6,7 +6,7 @@
 import Pmw
 import cliVar
 from types import *
-from Tkinter import *
+from tkinter import *
 from clientInterfaces import *
 #import clientSearchArchive
 
@@ -79,7 +79,7 @@ class GenericListing(Pmw.ScrolledListBox):
                 b = idx
                 if a == None:
                     a = idx
-        if a <> None:
+        if a != None:
             subset = msgSummaries[a:b+1]
             msgSummaries[a:b+1] = []
             msgSummaries[0:0] = subset
@@ -126,7 +126,7 @@ class ArchiveList(GenericListing):
         if cliVar.currentNewsGroup:
             fromID = max(toID - ChunkSize, 0)
             self.msgSummaries[fromID:toID] = \
-                        MessageSummaries(range(fromID, toID))
+                        MessageSummaries(list(range(fromID, toID)))
         msgStrs = [ ]
         for modID, msgID, status, subject, rcvd, fromAddr in self.msgSummaries:
             msgStrs.append("%s%5d %-8s [%-25s] %-25s" % (LocalTimeSm(rcvd),
@@ -138,7 +138,7 @@ class ArchiveList(GenericListing):
 
     def UpdateView(self):
         # Read 50 top messages from server and display them.
-        if self.currentNewsGroup <> cliVar.currentNewsGroup:
+        if self.currentNewsGroup != cliVar.currentNewsGroup:
             self.currentNewsGroup = cliVar.currentNewsGroup
             self.msgSummaries = [ ]
         if cliVar.currentNewsGroup:

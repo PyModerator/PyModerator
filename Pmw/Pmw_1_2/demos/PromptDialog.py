@@ -4,7 +4,7 @@ title = 'Pmw.PromptDialog demonstration'
 import sys
 sys.path[:0] = ['../../..']
 
-import Tkinter
+import tkinter
 import Pmw
 
 # This may demonstrate a bug in Tk.  Click on Cancel in the confirm
@@ -34,29 +34,29 @@ class Demo:
 	self.confirm.withdraw()
 
 	# Create button to launch the dialog.
-	w = Tkinter.Button(parent, text = 'Show prompt dialog',
+	w = tkinter.Button(parent, text = 'Show prompt dialog',
 	        command = self.dialog.activate)
 	w.pack(padx = 8, pady = 8)
 
     def execute(self, result):
 	if result is None or result == 'Cancel':
-	    print 'Password prompt cancelled'
+	    print('Password prompt cancelled')
 	    self.dialog.deactivate(result)
 	else:
 	    result = self.confirm.activate()
 	    if result == 'OK':
-		print 'Password entered ' + self.dialog.get()
+		print('Password entered ' + self.dialog.get())
 		self.dialog.deactivate()
 
 ######################################################################
 
 # Create demo in root window for testing.
 if __name__ == '__main__':
-    root = Tkinter.Tk()
+    root = tkinter.Tk()
     Pmw.initialise(root)
     root.title(title)
 
-    exitButton = Tkinter.Button(root, text = 'Exit', command = root.destroy)
+    exitButton = tkinter.Button(root, text = 'Exit', command = root.destroy)
     exitButton.pack(side = 'bottom')
     widget = Demo(root)
     root.mainloop()

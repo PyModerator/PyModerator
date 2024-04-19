@@ -1,4 +1,4 @@
-import Tkinter
+import tkinter
 import Test
 import Pmw
 
@@ -68,7 +68,7 @@ tests_1 = (
     ('entry_width', 30),
     ('relief', 'bogus', 'KeyError: Unknown option "relief" for Counter'),
     (c.invoke, (), 1),
-    (c.interior, (), Tkinter.Frame),
+    (c.interior, (), tkinter.Frame),
     (c.increment, ()),
     (c.get, (), '70'),
     ('increment', 5),

@@ -5,7 +5,7 @@ import sys
 sys.path[:0] = ['../../..']
 
 import string
-import Tkinter
+import tkinter
 import Pmw
 
 class Demo:
@@ -43,7 +43,7 @@ class Demo:
 		text = args[0]
 		if args[1] != 0:
 		    text = text + ' ' + str(args[1])
-		for name, value in dict.items():
+		for name, value in list(dict.items()):
 		    text = text + ' ' + name + ': ' + str(value)
 		Demo.fontText.append(text)
 
@@ -57,7 +57,7 @@ class Demo:
 	self.box.pack(fill = 'both', expand = 1, padx = 10, pady = 10)
 
 	# Create a label to display the selected font.
-	self.target = Tkinter.Label(parent,
+	self.target = tkinter.Label(parent,
 	        text = 'The quick brown fox jumps\nover the lazy dog',
 		relief = 'sunken', padx = 10, pady = 10)
 	self.target.pack(fill = 'both', expand = 1, padx = 10, pady = 10)
@@ -66,19 +66,19 @@ class Demo:
 	sel = self.box.curselection()
 	if len(sel) > 0:
 	    args, dict = Demo.fontList[string.atoi(sel[0])]
-	    font = apply(Pmw.logicalfont, args, dict)
+	    font = Pmw.logicalfont(*args, **dict)
             self.target.configure(font = font)
-            print font
+            print(font)
 
 ######################################################################
 
 # Create demo in root window for testing.
 if __name__ == '__main__':
-    root = Tkinter.Tk()
+    root = tkinter.Tk()
     Pmw.initialise(root)
     root.title(title)
 
-    exitButton = Tkinter.Button(root, text = 'Exit', command = root.destroy)
+    exitButton = tkinter.Button(root, text = 'Exit', command = root.destroy)
     exitButton.pack(side = 'bottom')
     widget = Demo(root)
     root.mainloop()
