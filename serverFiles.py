@@ -10,7 +10,7 @@
 
 import time
 import pickle
-import sha
+import hashlib
 import os
 import nntplib
 import poplib
@@ -22,7 +22,7 @@ from commonDefs import *
 IndexRecLen = 38
 
 def Crypt(password):
-    return sha.new(password).hexdigest()
+    return hashlib.sha1(password.encode('utf-8')).hexdigest()
 
 class ServerApp(ServerData):
     def __init__(self):
