@@ -39,7 +39,7 @@ def DoCommand(cmd, args):
         return Oops("Not connected to server!")
     cliVar.app.busyStart()
     try:
-        cmdFile.reset()
+        cmdFile.seek(0)
         cmdFile.truncate()
         cmdFile.write(cmd + "\n")
         pickle.dump(args, cmdFile, 1)
