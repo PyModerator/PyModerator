@@ -291,7 +291,7 @@ class PyModeratorClient(AppShell.AppShell):
         try:
             sockFd = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             sockFd.connect((self.cache.serviceHost, self.cache.servicePort))
-            cliVar.sockFile = sockFd.makefile("wb+")
+            cliVar.sockFile = sockFd.makefile("rwb")
         except:
             self.busyEnd()
             return sys.exc_info()[1]
