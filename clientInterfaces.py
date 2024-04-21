@@ -18,11 +18,11 @@ def Oops(err):
     tkinter.messagebox.showerror("Error", msg)
     return None
 
-cmdFile = io.StringIO()
+cmdFile = io.BytesIO()
 
 #------------------------------------------------------------------------------
 def ReadSock(num):
-    buf = ""
+    buf = bytearray()
     while len(buf) < num:
         inBytes = cliVar.sockFile.read(num - len(buf))
         if len(inBytes) < 1:
@@ -41,7 +41,8 @@ def DoCommand(cmd, args):
     try:
         cmdFile.seek(0)
         cmdFile.truncate()
-        cmdFile.write(cmd + "\n")
+        cmd = cmd + "\n"
+        cmdFile.write(cmd.encode(encoding='utf-8'))
         pickle.dump(args, cmdFile, 1)
         cmdBuf = cmdFile.getvalue()
         cmdLen = struct.pack(">l", len(cmdBuf))

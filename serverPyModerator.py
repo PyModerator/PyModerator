@@ -582,12 +582,12 @@ class ClientHandler(asyncore.dispatcher):
         print("ClientHandler ", remAddr)
         asyncore.dispatcher.__init__(self, sock)
         self.remAddr = remAddr
-        self.inBuffer = ""
+        self.inBuffer = bytearray()
         self.outBuffer = ""
         self.inLenNeeded = 4
         self.modContext = [ None ]
         self.funcState = self.ExtractCmdLen
-        self.cmdFile = io.StringIO()
+        self.cmdFile = io.BytesIO()
         self.idleTimeout = TimeNow() + serVar.app.rw.idleTimeLogout
 
     def handle_read(self):
@@ -596,7 +596,7 @@ class ClientHandler(asyncore.dispatcher):
         self.inBuffer = self.inBuffer + inStr
         if not self.inLenNeeded:
             self.funcState = self.funcState()
-            self.inBuffer = ""
+            self.inBuffer.clear()
 
     def ExtractCmdLen(self):
         # Reverse is struct.pack(">l", bufferLen)
@@ -607,7 +607,7 @@ class ClientHandler(asyncore.dispatcher):
 
     def ExtractAndDoCmd(self):
         try:
-            self.cmdFile.reset()
+            self.cmdFile.seek(0)
             self.cmdFile.truncate()
             self.cmdFile.write(self.inBuffer)
             self.cmdFile.seek(0)
@@ -617,11 +617,11 @@ class ClientHandler(asyncore.dispatcher):
             args = pickle.load(self.cmdFile)
             #print "Args: %s" % args
             try:
-                rsp = DoCommand(cmd, args, self.modContext)
+                rsp = DoCommand(cmd.decode(encoding='utf-8'), args, self.modContext)
             except CmdError:
                 rsp = sys.exc_info()[1]
             #print "rsp=", rsp
-            rspFile = io.StringIO()
+            rspFile = io.BytesIO()
             pickle.dump(rsp, rspFile, 1)
             buf = rspFile.getvalue()
             self.outBuffer = struct.pack(">l", len(buf)) + buf
