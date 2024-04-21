@@ -60,7 +60,7 @@ def CleanCut(argStr, argLen):
                 argStr = tmpStr
     return argStr
 
-class CmdError:
+class CmdError(Exception):
     def __init__(self, details):
         self.details = details
 
