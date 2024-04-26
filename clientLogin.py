@@ -7,7 +7,6 @@ import tkinter.messagebox
 import tkinter.simpledialog
 import altDialog
 import cliVar
-import string
 from tkinter import *
 from clientInterfaces import *
 

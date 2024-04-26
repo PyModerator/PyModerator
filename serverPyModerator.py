@@ -9,7 +9,6 @@
 
 import sys
 import socket
-import string
 import pickle
 import io
 import traceback
@@ -558,7 +557,7 @@ def DoCommand(cmd, args, modContext):
             raise
         except:
             t, v, i = sys.exc_info()
-            excStr = string.join(traceback.format_exception(t, v, i), "")
+            excStr = "".join(traceback.format_exception(t, v, i))
             raise CmdError("%s" % excStr)
     else:
         raise CmdError("Invalid command")
@@ -679,7 +678,7 @@ def PeriodicPost(newsGroupID, messageID):
                     except CmdError as errVal:
                         eventRW.eventDetail = errVal.details
                 else:
-                    toAddr = string.replace(newsGroupID, ".", "-") + \
+                    toAddr = newsGroupID.replace(".", "-") + \
                                 "@moderators.isc.org"
                     msg.ro.outHeaders[("To", 0)] = toAddr
                     toAddrs = [ toAddr ]

@@ -5,7 +5,6 @@
 import Pmw
 import altDialog
 import cliVar
-import string
 from tkinter import *
 from clientInterfaces import *
 

@@ -5,7 +5,6 @@
 import Pmw
 import altDialog
 import cliVar
-import string
 import smtplib
 import sys
 from tkinter import *
@@ -26,7 +25,7 @@ def SendEMailReply(message, otherText):
                 toLine = ""
         subjectLine = message.rw.inHeaders.get(("Subject", 0))
         if subjectLine:
-            if string.lower(subjectLine[:3]) != "re:":
+            if subjectLine[:3].lower() != "re:":
                 subjectLine = "Re: " + subjectLine
         else:
             subjectLine = ""
@@ -44,9 +43,9 @@ def SendEMailReply(message, otherText):
     buttonSelect = dialog.GetInput()
     if buttonSelect != "OK":
         return None
-    allAddrs = [_f for _f in map(string.strip,
-                string.split(dialog.toLine + "," + dialog.bccLine, ",")) if _f]
-    msgBody = string.join(WordWrap(string.split(dialog.bodyLines, "\n")), "\n")
+    allAddrs = [_f.strip() for _f in 
+                (dialog.toLine + "," + dialog.bccLine).split(",") if _f]
+    msgBody = "\n".join(WordWrap(dialog.bodyLines.split("\n")))
     outHeaders = { ("From", 0): dialog.fromLine, ("To", 0): dialog.toLine,
                     ("Subject", 0): dialog.subjectLine }
     msg, errMsg = EmailMessage(allAddrs, outHeaders, msgBody,

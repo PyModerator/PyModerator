@@ -5,7 +5,6 @@
 
 import Pmw
 import cliVar
-import string
 import sys
 from tkinter import *
 from clientInterfaces import *

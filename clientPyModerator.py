@@ -17,7 +17,6 @@ import tkinter.simpledialog
 import altDialog
 import cliVar
 import io
-import string
 from tkinter import *
 from clientInterfaces import *
 from clientLogin import *
@@ -391,7 +390,7 @@ def ShowStatistics():
         numCols = len(colNames)
         modNames = list(stats.keys())
         modWidth = max(list(map(len, modNames + ["Totals"]))) + 1
-        hdr = modWidth*" " + string.join(colNames, " ") + "\n"
+        hdr = modWidth*" " + " ".join(colNames) + "\n"
         dmsg = hdr
         rows = list(stats.items())
         rows.sort()
@@ -472,7 +471,7 @@ def DoApprove():
         if not fromAddress:
             fromAddress = cliVar.thisModeratorID
         outHeaders[("Approved", 0)] = fromAddress
-        outTxt = string.join(WordWrap(string.split(msg.ro.outTxt, "\n")), "\n")
+        outTxt = "\n".join(WordWrap(msg.ro.outTxt.split("\n")))
         if not cliVar.currentNewsGroup.rw.postFromServer:
             usr = app.cache
             try:

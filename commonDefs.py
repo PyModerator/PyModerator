@@ -55,7 +55,7 @@ def CleanCut(argStr, argLen):
         ec = argStr[argLen]
         argStr = argStr[:argLen]
         if ec not in string.whitespace:
-            tmpStr = string.join(string.split(argStr, " ")[:-1], " ")
+            tmpStr = " ".join(argStr.split(" ")[:-1])
             if len(tmpStr) > 0:
                 argStr = tmpStr
     return argStr
@@ -109,7 +109,7 @@ def PostMessage(outHeaders, outTxt, nntpHost, nntpPort, nntpUser, nntpPassword):
 def NewMaterial(inTxt):
     # Strip all leading and trailing whitespace from all lines, then
     # remove all blank lines. Put result in inLines.
-    inLines = [_f for _f in map(string.strip, string.split(inTxt, "\n")) if _f]
+    inLines = [_f.strip() for _f in inTxt.split("\n") if _f]
     newText = totalText = 0.0
     for aline in inLines:
         totalText = totalText + len(aline)
@@ -135,7 +135,7 @@ def Rep(self):
     indent = indent + "  "
     cls = self.__class__.__name__
     args = list(self.__dict__.items())
-    strArgs = string.join(list(map(Fmt, args)), "\n")
+    strArgs = "\n".join(list(map(Fmt, args)))
     retval = "%s:\n%s\n" % (cls, strArgs)
     indent = indent[:-2]
     return retval

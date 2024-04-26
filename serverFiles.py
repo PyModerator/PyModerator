@@ -180,7 +180,7 @@ def ParseMessageLines(txtLines):
     for i in range(len(hdr)):
         if " " == hdr[i][0] or "\011" == hdr[i][0]:   # Space or tab
             # If leading space or tab, append left-stripped line to previous.
-            hdr[j] = hdr[j] + string.lstrip(hdr[i])
+            hdr[j] = hdr[j] + hdr[i].lstrip()
             hdr[i] = None
         else:
             j = i
@@ -189,16 +189,16 @@ def ParseMessageLines(txtLines):
     # Construct headers dictionary.
     hdrDict = { }
     for hdrLine in hdr:
-        colon = string.index(hdrLine, ":")
-        hdrName = string.capitalize(string.rstrip(hdrLine[:colon]))
-        hdrValue = string.lstrip(hdrLine[colon + 1:])
+        colon = hdrLine.index(":")
+        hdrName = hdrLine[:colon].rstrip().capitalize()
+        hdrValue = hdrLine[colon + 1:].lstrip()
         # Header names may be repeated, (e.g. Received), so make unique key.
         idx = 0
         while (hdrName, idx) in hdrDict:
             idx = idx + 1
         hdrDict[(hdrName, idx)] = hdrValue
     # Also replace any embedded nulls with newlines as a precaution.
-    return hdrDict, string.replace(string.join(body, "\n"), "\000", "\n")
+    return hdrDict, "\n".join(body).replace("\000", "\n")
 
 def CheckCrossPosting(newsGroup, headers):
     allowCrossPosts = newsGroup.rw.allowCrossPosts
@@ -206,13 +206,13 @@ def CheckCrossPosting(newsGroup, headers):
     val = headers.get(("Newsgroups", 0))
     badgroups = ""
     if val != None:
-        newsgroups = [_f for _f in map(string.strip, string.split(val, ",")) if _f]
+        newsgroups = [_f.strip() for _f in val.split(",") if _f]
         for grp in newsgroups:
             flag = serVar.validNewsGroupIDs.get(grp)
             if grp != newsGroupID:
                 if flag != "y" or not allowCrossPosts:
                     badgroups = "%s%s: %s, " % (badgroups, grp,
-                                            string.capitalize(str(flag)))
+                                            str(flag).capitalize())
         if badgroups:
             badgroups = badgroups[:-2]
     return badgroups
@@ -376,13 +376,13 @@ class NewsGroupFile:
 # selected item names.
 
 def IncomingHdrStr(msg):
-    return string.join(list(msg.rw.inHeaders.values()), "\n")
+    return "\n".join(list(msg.rw.inHeaders.values()))
 
 def IncomingBdyStr(msg):
     return msg.rw.inTxt
 
 def OutgoingHdrStr(msg):
-    return string.join(list(msg.ro.outHeaders.values()), "\n")
+    return "\n".join(list(msg.ro.outHeaders.values()))
 
 def OutgoingBdyStr(msg):
     return msg.ro.outTxt

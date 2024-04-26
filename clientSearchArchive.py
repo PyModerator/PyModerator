@@ -5,7 +5,6 @@
 import Pmw
 import altDialog
 import cliVar
-import string
 from tkinter import *
 from clientInterfaces import *
 
@@ -70,7 +69,7 @@ class SearchDialog(altDialog.AltDialog):
             cliVar.app.messageView.DisplayMessage(msg, hdrNotes)
 
     def Validate(self):
-        searchExp = string.strip(self.searchExpW.get())
+        searchExp = self.searchExpW.get().strip()
         ignoreCase = self.ignoreCaseW.index(self.ignoreCaseW.getcurselection())
         itemNames = self.itemNamesW.getcurselection()
         if cliVar.currentNewsGroup == None:

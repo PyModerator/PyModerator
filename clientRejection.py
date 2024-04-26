@@ -10,7 +10,6 @@ import tkinter.simpledialog
 import altDialog
 import cliVar
 import clientEMail
-import string
 from tkinter import *
 from clientInterfaces import *
 
