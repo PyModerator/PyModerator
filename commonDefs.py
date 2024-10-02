@@ -101,9 +101,9 @@ def PostMessage(outHeaders, outTxt, nntpHost, nntpPort, nntpUser, nntpPassword):
         for hdr in hdrs:
             msg = "%s%s: %s\n" % (msg, hdr[0][0], hdr[1])
         msg = "%s\n%s" % (msg, outTxt)
-        nntpDst.post(io.StringIO(msg))
-    except (nntplib.error_reply, nntplib.error_temp, nntplib.error_perm,
-            nntplib.error_proto) as val:
+        nntpDst.post(io.BytesIO(msg.encode('utf-8')))
+    except (nntplib.NNTPReplyError, nntplib.NNTPTemporaryError,
+            nntplib.NNTPPermanentError, nntplib.NNTPProtocolError) as val:
         raise CmdError("NNTP error to %s: '%s'" % (nntpHost, val))
 
 def NewMaterial(inTxt):

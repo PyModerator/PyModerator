@@ -235,7 +235,9 @@ def ReadPOPMailbox(newsGroupID):
         raise CmdError("POP mail protocol failure: %s" % val)
     for idx in range(numMsgs):
         popMsg = popServer.retr(idx + 1)
-        inHeaders, inTxt = ParseMessageLines(popMsg[1])
+        msgLines = [line.decode(encoding="utf-8", errors="replace")
+                    for line in popMsg[1]]
+        inHeaders, inTxt = ParseMessageLines(msgLines)
         messageRW = MessageRWData(inTxt, inHeaders)
         messageID = newsGroupFile.NewMessage(messageRW,
                 EventData("root", EventRWData("Assigned")), 1)
