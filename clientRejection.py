@@ -111,6 +111,7 @@ def EditARejection(rejectionID):
             app.ShowModeratorStatus()
 
 def DeleteARejection(rejectionID):
+    app = cliVar.app
     button = tkinter.messagebox.askquestion("Delete Rejection %s" % rejectionID,
                 "WARNING!\n"
                 "You are about to delete rejection %s.\n"
