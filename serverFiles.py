@@ -224,7 +224,11 @@ def ReadPOPMailbox(newsGroupID):
     if not newsGroupRW.popHost:
         return 0
     try:
-        popServer = poplib.POP3(newsGroupRW.popHost, newsGroupRW.popPort)
+        if (newsGroupRW.popSSL):
+            popServer = poplib.POP3_SSL(newsGroupRW.popHost, 
+                                        newsGroupRW.popPort)
+        else:
+            popServer = poplib.POP3(newsGroupRW.popHost, newsGroupRW.popPort)
         popServer.getwelcome()
         popServer.user(newsGroupRW.popUserID)
         popServer.pass_(newsGroupRW.popPassword)

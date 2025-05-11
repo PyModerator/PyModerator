@@ -211,11 +211,12 @@ class ModeratorData:
 
 #------------------------------------------------------------------------------
 class NewsGroupRWData:
-    def __init__(self, popHost = "", popPort = 110, popUserID = "",
+    def __init__(self, popHost = "", popPort = 110, popUserID = "", popSSL = 0,
                     popPassword = "", allowCrossPosts = 0, roundRobinAssign = 0,
                     postFromServer = 0):
         self.popHost = popHost
         self.popPort = popPort
+        self.popSSL = popSSL
         self.popUserID = popUserID
         self.popPassword = popPassword
         self.allowCrossPosts = allowCrossPosts

@@ -102,6 +102,7 @@ class EditNewsGroupDialog(altDialog.AltDialog):
         self.newsGroupID.setentry(ro.newsGroupID)
         self.popHost.setentry(rw.popHost)
         self.popPort.setentry(str(rw.popPort))
+        self.popSSL.invoke(rw.popSSL)
         self.popUserID.setentry(rw.popUserID)
         self.popPassword.setentry(rw.popPassword)
         self.allowCrossPosts.invoke(rw.allowCrossPosts)
@@ -131,6 +132,10 @@ class EditNewsGroupDialog(altDialog.AltDialog):
                         label_text = "POP Host :")
         self.popPort = Pmw.EntryField(master, labelpos=W,
                         label_text = "POP Port :", validate = "numeric")
+        self.popSSL = w = Pmw.RadioSelect(master, labelpos=W,
+                        label_text = "Connect using SSL :")
+        w.add("No")
+        w.add("Yes")
         self.popUserID = Pmw.EntryField(master, labelpos=W,
                         label_text = "POP User ID :")
         self.popPassword = Pmw.EntryField(master, labelpos=W,
@@ -162,7 +167,7 @@ class EditNewsGroupDialog(altDialog.AltDialog):
                         label_text = "Moderators :", orient = VERTICAL,
                         selectmode = MULTIPLE)
 
-        widgets = (self.newsGroupID, self.popHost, self.popPort,
+        widgets = (self.newsGroupID, self.popHost, self.popPort, self.popSSL,
                     self.popUserID, self.popPassword, self.allowCrossPosts,
                     self.roundRobinAssign, self.quotingYellow, self.quotingRed,
                     self.postFromServer, self.createTime,
@@ -178,6 +183,8 @@ class EditNewsGroupDialog(altDialog.AltDialog):
         ro.newsGroupID = self.newsGroupID.get().strip()
         rw.popHost = self.popHost.get().strip()
         rw.popPort = int(self.popPort.get().strip())
+        w = self.popSSL
+        rw.popSSL = w.index(w.getcurselection())
         rw.popUserID = self.popUserID.get().strip()
         rw.popPassword = self.popPassword.get()
         w = self.allowCrossPosts
