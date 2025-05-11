@@ -236,7 +236,7 @@ def ReadPOPMailbox(newsGroupID):
         popServer.pass_(newsGroupRW.popPassword)
         numMsgs, popStat = popServer.stat()
     except socket.error as val:
-        raise CmdError("Failed to connect to POP mail server: %s" % val[1])
+        raise CmdError("Failed to connect to POP mail server: %s" % val)
     except poplib.error_proto as val:
         raise CmdError("POP mail protocol failure: %s" % val)
     for idx in range(numMsgs):
