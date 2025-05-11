@@ -17,6 +17,7 @@ import poplib
 import serVar
 import io
 import socket
+import ssl
 from commonDefs import *
 
 IndexRecLen = 38
@@ -226,7 +227,8 @@ def ReadPOPMailbox(newsGroupID):
     try:
         if (newsGroupRW.popSSL):
             popServer = poplib.POP3_SSL(newsGroupRW.popHost, 
-                                        newsGroupRW.popPort)
+                                        newsGroupRW.popPort,
+                                        context=ssl.create_default_context())
         else:
             popServer = poplib.POP3(newsGroupRW.popHost, newsGroupRW.popPort)
         popServer.getwelcome()
