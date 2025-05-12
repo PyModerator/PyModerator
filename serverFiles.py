@@ -358,7 +358,7 @@ class NewsGroupFile:
             if newsGroupRW.postFromServer:
                 rw = serVar.app.rw
                 PostMessage(outHeaders, outTxt, rw.nntpHost, rw.nntpPort,
-                                rw.nntpUser, rw.nntpPassword)
+                            rw.nntpSecurity, rw.nntpUser, rw.nntpPassword)
             message.ro.status = "Approved"
             message.ro.outTxt = outTxt
             message.ro.outHeaders = outHeaders

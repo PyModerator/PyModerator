@@ -36,9 +36,11 @@ class CachedData:
         self.servicePort = 11556
         self.nntpHost = ""
         self.nntpPort = 119
+        self.nntpSecurity = "Plaintext"
         self.nntpUser = ""
         self.nntpPassword = ""
         self.smtpHost = ""
+        self.smtpSecurity = "Plaintext"
         self.ballonState = "both"
 
 class PyModeratorClient(AppShell.AppShell):
@@ -341,9 +343,11 @@ class EditServerData(altDialog.AltDialog):
         rw = cliVar.svr.rw
         self.nntpHost.setentry(rw.nntpHost)
         self.nntpPort.setentry(str(rw.nntpPort))
+        self.nntpSecurity.setvalue(rw.nntpSecurity)
         self.nntpUser.setentry(rw.nntpUser)
         self.nntpPassword.setentry(rw.nntpPassword)
         self.smtpHost.setentry(rw.smtpHost)
+        self.smtpSecurity.setvalue(rw.smtpSecurity)
         self.idleTimeLogout.setentry(str(rw.idleTimeLogout))
 
     def Body(self, master):
@@ -352,17 +356,24 @@ class EditServerData(altDialog.AltDialog):
                             label_text = "NNTP Host :")
         self.nntpPort = Pmw.EntryField(master, labelpos=W,
                             label_text = "NNTP Port :", validate = "numeric")
+        self.nntpSecurity = Pmw.OptionMenu(master, labelpos=W,
+                            label_text = "NNTP Security :",
+                            items = ["Plaintext", "STARTTLS", "SSL"])
         self.nntpUser = Pmw.EntryField(master, labelpos=W,
                             label_text = "NNTP User :")
         self.nntpPassword = Pmw.EntryField(master, labelpos=W,
                             label_text = "NNTP Password :")
         self.smtpHost = Pmw.EntryField(master, labelpos=W,
                             label_text = "SMTP Host :")
+        self.smtpSecurity = Pmw.OptionMenu(master, labelpos=W,
+                            label_text = "SMTP Security :",
+                            items = ["Plaintext", "STARTTLS", "SSL"])
         self.idleTimeLogout = Pmw.EntryField(master, labelpos=W,
                             label_text = "Idle Timeout (secs) :",
                             validate = "numeric")
-        widgets = (self.nntpHost, self.nntpPort, self.nntpUser,
-                    self.nntpPassword, self.smtpHost, self.idleTimeLogout)
+        widgets = (self.nntpHost, self.nntpPort, self.nntpSecurity, 
+                   self.nntpUser, self.nntpPassword, self.smtpHost, 
+                   self.smtpSecurity, self.idleTimeLogout)
         for w in widgets:
             w.pack(fill=X, expand=1, padx=10, pady=5)
         Pmw.alignlabels(widgets)
@@ -372,9 +383,11 @@ class EditServerData(altDialog.AltDialog):
         tmpRW = ServerRWData()
         tmpRW.nntpHost = self.nntpHost.get().strip()
         tmpRW.nntpPort = int(self.nntpPort.get().strip())
+        tmpRW.nntpSecurity = self.nntpSecurity.getvalue()
         tmpRW.nntpUser = self.nntpUser.get().strip()
         tmpRW.nntpPassword = self.nntpPassword.get()
         tmpRW.smtpHost = self.smtpHost.get().strip()
+        tmpRW.smtpSecurity = self.smtpSecurity.getvalue()
         tmpRW.idleTimeLogout = int(self.idleTimeLogout.get().strip())
         if ServerUpdate(tmpRW) == None:
             cliVar.svr.rw = tmpRW
@@ -476,7 +489,7 @@ def DoApprove():
             usr = app.cache
             try:
                 PostMessage(outHeaders, outTxt, usr.nntpHost, usr.nntpPort,
-                            usr.nntpUser, usr.nntpPassword)
+                            usr.nntpSecurity, usr.nntpUser, usr.nntpPassword)
             except CmdError as err:
                 return Oops(err)
         MessageApprove(msgID, outTxt, outHeaders, "")

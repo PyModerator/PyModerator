@@ -20,9 +20,11 @@ class EditLoginData(altDialog.AltDialog):
         self.servicePort.setentry(str(cache.servicePort))
         self.nntpHost.setentry(cache.nntpHost)
         self.nntpPort.setentry(str(cache.nntpPort))
+        self.nntpSecurity.setvalue(str(cache.nntpSecurity))
         self.nntpUser.setentry(cache.nntpUser)
         self.nntpPassword.setentry(cache.nntpPassword)
         self.smtpHost.setentry(cache.smtpHost)
+        self.smtpSecurity.setvalue(str(cache.smtpSecurity))
 
     def Body(self, master):
         self.title("Edit Default Login Fields")
@@ -36,15 +38,22 @@ class EditLoginData(altDialog.AltDialog):
                             label_text = "NNTP Host :")
         self.nntpPort = Pmw.EntryField(master, labelpos=W,
                             label_text = "NNTP Port :", validate = "numeric")
+        self.nntpSecurity = Pmw.OptionMenu(master, labelpos=W,
+                            label_text = "NNTP Security :",
+                            items = ["Plaintext", "STARTTLS", "SSL"])
         self.nntpUser = Pmw.EntryField(master, labelpos=W,
                             label_text = "NNTP User :")
         self.nntpPassword = Pmw.EntryField(master, labelpos=W,
                             label_text = "NNTP Password :")
         self.smtpHost = Pmw.EntryField(master, labelpos=W,
                             label_text = "SMTP Host :")
+        self.smtpSecurity = Pmw.OptionMenu(master, labelpos=W,
+                            label_text = "SMTP Security :",
+                            items = ["Plaintext", "STARTTLS", "SSL"])
         widgets = (self.moderatorID, self.serviceHost, self.servicePort,
-                    self.nntpHost, self.nntpPort, self.nntpUser,
-                    self.nntpPassword, self.smtpHost)
+                   self.nntpHost, self.nntpPort, self.nntpSecurity,
+                   self.nntpUser, self.nntpPassword, self.smtpHost,
+                   self.smtpSecurity)
         for w in widgets:
             w.pack(fill=X, expand=1, padx=10, pady=5)
         Pmw.alignlabels(widgets)
@@ -58,9 +67,11 @@ class EditLoginData(altDialog.AltDialog):
         cache.servicePort = int(self.servicePort.get().strip())
         cache.nntpHost = self.nntpHost.get().strip()
         cache.nntpPort = int(self.nntpPort.get().strip())
+        cache.nntpSecurity = self.nntpSecurity.getvalue()
         cache.nntpUser = self.nntpUser.get().strip()
         cache.nntpPassword = self.nntpPassword.get()
         cache.smtpHost = self.smtpHost.get().strip()
+        cache.smtpSecurity = self.smtpSecurity.getvalue()
         app.WriteCache()
 
 class LoginDialog(altDialog.AltDialog):

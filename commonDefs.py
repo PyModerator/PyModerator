@@ -9,6 +9,7 @@ import types
 import string
 import nntplib
 import smtplib
+import ssl
 import io
 
 #------------------------------------------------------------------------------
@@ -70,7 +71,7 @@ class CmdError(Exception):
 def EmptySummary(messageID, status):
     return ("-", messageID, status, "", None, "")
 
-def EmailMessage(toAddrs, outHeaders, outTxt, smtpHost):
+def EmailMessage(toAddrs, outHeaders, outTxt, smtpHost, smtpSecurity):
     fromAddr = outHeaders.get(("From", 0), "")
     hdrs = list(outHeaders.items())
     msg = ""
@@ -80,21 +81,33 @@ def EmailMessage(toAddrs, outHeaders, outTxt, smtpHost):
     msg = "%s\n%s" % (msg, outTxt)
     errMsg = ""
     try:
-        smtpServer = smtplib.SMTP()
-        #smtpServer.set_debuglevel(1)
+        if smtpSecurity == "SSL":
+            smtpServer = smtplib.SMTP_SSL(smtpHost,
+                                          context=ssl.create_default_context())
+        else:
+            smtpServer = smtplib.SMTP(smtpHost)
         smtpServer.connect(smtpHost)
+        if smtpSecurity == "STARTTLS":
+            smtpServer.starttls(context=ssl.create_default_context())
         smtpServer.sendmail(fromAddr, toAddrs, msg)
         smtpServer.quit()
     except:
         errMsg = "ERROR! Message not sent: %s" % sys.exc_info()[1]
     return msg, errMsg
 
-def PostMessage(outHeaders, outTxt, nntpHost, nntpPort, nntpUser, nntpPassword):
+def PostMessage(outHeaders, outTxt, nntpHost, nntpPort, nntpSecurity, nntpUser, nntpPassword):
     try:
-        if nntpUser:
-            nntpDst = nntplib.NNTP(nntpHost, nntpPort, nntpUser, nntpPassword)
+        if nntpSecurity == "SSL":
+            nntpDst = nntplib.NNTP_SSL(nntpHost, nntpPort, 
+                                       ssl_context=ssl.create_default_context(),
+                                       usenetrc=False)
         else:
-            nntpDst = nntplib.NNTP(nntpHost, nntpPort)
+            nntpDst = nntplib.NNTP(nntpHost, nntpPort, usenetrc=False)
+        if nntpSecurity == "STARTTLS":
+            nntpDst.starttls(context=ssl.create_default_context())
+        if nntpUser:
+            nntpDst.login(nntpUser, nntpPassword, usenetrc=False)
+
         msg = ""
         hdrs = list(outHeaders.items())
         hdrs.sort()

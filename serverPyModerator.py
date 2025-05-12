@@ -19,6 +19,7 @@ import re
 import struct
 import asyncore
 import traceback
+import ssl
 from commonDefs import *
 from serverFiles import *
 
@@ -91,15 +92,24 @@ def ServerUpdateValidGroups(modContext):
     if modContext[0].ro.userType != "Superuser":
         raise CmdError("Must be superuser to update valid group list.")
     rw = app.rw
-    if rw.nntpUser:
-        nntpDst = nntplib.NNTP(rw.nntpHost, rw.nntpPort, rw.nntpUser,
-                               rw.nntpPassword)
-    else:
-        nntpDst = nntplib.NNTP(app.rw.nntpHost, app.rw.nntpPort)
-    grps = nntpDst.list()[1]
-    for grp in grps:
-        serVar.validNewsGroupIDs[grp[0]] = grp[3]
-    app.WriteValidGroups()
+    try:
+        if rw.nntpSecurity == "SSL":
+            nntpDst = nntplib.NNTP_SSL(rw.nntpHost, rw.nntpPort,
+                                       ssl_context=ssl.create_default_context(),
+                                       usenetrc=False)
+        else:
+            nntpDst = nntplib.NNTP(rw.nntpHost, rw.nntpPort, usenetrc=False)
+        if rw.nntpSecurity == "STARTTLS":
+            nntpDst.starttls(context=ssl.create_default_context())
+        if rw.nntpUser:
+            nntpDst.login(rw.nntpUser, rw.nntpPassword, usenetrc=False)
+
+        grps = nntpDst.list()[1]
+        for grp in grps:
+            serVar.validNewsGroupIDs[grp[0]] = grp[3]
+        app.WriteValidGroups()
+    except (nntplib.NNTPError, ssl.SSLError) as val:
+        raise CmdError("Error updating newsgroup list: %s" % val)
 AddCmd(ServerUpdateValidGroups)
 
 #------------------------------------------------------------------------------
@@ -673,8 +683,8 @@ def PeriodicPost(newsGroupID, messageID):
                     rw = serVar.app.rw
                     try:
                         PostMessage(msg.ro.outHeaders, msg.ro.outTxt,
-                            rw.nntpHost, rw.nntpPort, rw.nntpUser,
-                            rw.nntpPassword)
+                            rw.nntpHost, rw.nntpPort, rw.nntpSecurity,
+                            rw.nntpUser, rw.nntpPassword)
                     except CmdError as errVal:
                         eventRW.eventDetail = errVal.details
                 else:
@@ -683,7 +693,9 @@ def PeriodicPost(newsGroupID, messageID):
                     msg.ro.outHeaders[("To", 0)] = toAddr
                     toAddrs = [ toAddr ]
                     txt, errMsg = EmailMessage(toAddrs, msg.ro.outHeaders,
-                                    msg.ro.outTxt, serVar.app.rw.smtpHost)
+                                               msg.ro.outTxt,
+                                               serVar.app.rw.smtpHost,
+                                               serVar.app.rw.smtpSecurity)
                     eventRW = EventRWData("Scheduled Email", errMsg)
                 # Add an appropriate event note each time.
                 msg.ro.events[0:0] = [ EventData("root", eventRW) ]
