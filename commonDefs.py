@@ -161,9 +161,11 @@ class ServerRWData:
     def __init__(self):
         self.nntpHost = ""
         self.nntpPort = 119
+        self.nntpSecurity = "Plaintext"
         self.nntpUser = ""
         self.nntpPassword = ""
         self.smtpHost = ""
+        self.smtpSecurity = "Plaintext"
         self.idleTimeLogout = 900
 
     def __repr__(s):
