@@ -71,7 +71,7 @@ class CmdError(Exception):
 def EmptySummary(messageID, status):
     return ("-", messageID, status, "", None, "")
 
-def EmailMessage(toAddrs, outHeaders, outTxt, smtpHost, smtpSecurity):
+def EmailMessage(toAddrs, outHeaders, outTxt, smtpHost, smtpPort, smtpSecurity, smtpUser, smtpPassword):
     fromAddr = outHeaders.get(("From", 0), "")
     hdrs = list(outHeaders.items())
     msg = ""
@@ -82,13 +82,15 @@ def EmailMessage(toAddrs, outHeaders, outTxt, smtpHost, smtpSecurity):
     errMsg = ""
     try:
         if smtpSecurity == "SSL":
-            smtpServer = smtplib.SMTP_SSL(smtpHost,
+            smtpServer = smtplib.SMTP_SSL(smtpHost, smtpPort, 
                                           context=ssl.create_default_context())
         else:
-            smtpServer = smtplib.SMTP(smtpHost)
+            smtpServer = smtplib.SMTP(smtpHost, smtpPort)
         smtpServer.connect(smtpHost)
         if smtpSecurity == "STARTTLS":
             smtpServer.starttls(context=ssl.create_default_context())
+        if smtpUser:
+            smtpServer.login(smtpUser, smtpPassword)
         smtpServer.sendmail(fromAddr, toAddrs, msg)
         smtpServer.quit()
     except:
@@ -165,7 +167,10 @@ class ServerRWData:
         self.nntpUser = ""
         self.nntpPassword = ""
         self.smtpHost = ""
+        self.smtpPort = 25
         self.smtpSecurity = "Plaintext"
+        self.smtpUser = ""
+        self.smtpPassword = ""
         self.idleTimeLogout = 900
 
     def __repr__(s):

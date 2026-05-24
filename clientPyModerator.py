@@ -40,7 +40,10 @@ class CachedData:
         self.nntpUser = ""
         self.nntpPassword = ""
         self.smtpHost = ""
+        self.smtpPort = 25
         self.smtpSecurity = "Plaintext"
+        self.smtpUser = ""
+        self.smtpPassword = ""
         self.ballonState = "both"
 
 class PyModeratorClient(AppShell.AppShell):
@@ -347,7 +350,10 @@ class EditServerData(altDialog.AltDialog):
         self.nntpUser.setentry(rw.nntpUser)
         self.nntpPassword.setentry(rw.nntpPassword)
         self.smtpHost.setentry(rw.smtpHost)
+        self.smtpPort.setentry(rw.smtpPort)
         self.smtpSecurity.setvalue(rw.smtpSecurity)
+        self.smtpUser.setentry(rw.smtpUser)
+        self.smtpPassword.setentry(rw.smtpPassword)
         self.idleTimeLogout.setentry(str(rw.idleTimeLogout))
 
     def Body(self, master):
@@ -365,15 +371,22 @@ class EditServerData(altDialog.AltDialog):
                             label_text = "NNTP Password :")
         self.smtpHost = Pmw.EntryField(master, labelpos=W,
                             label_text = "SMTP Host :")
+        self.smtpPort = Pmw.EntryField(master, labelpos=W,
+                            label_text = "SMTP Port :", validate = "numeric")
         self.smtpSecurity = Pmw.OptionMenu(master, labelpos=W,
                             label_text = "SMTP Security :",
                             items = ["Plaintext", "STARTTLS", "SSL"])
+        self.smtpUser = Pmw.EntryField(master, labelpos=W,
+                            label_text = "SMTP User :")
+        self.smtpPassword = Pmw.EntryField(master, labelpos=W,
+                            label_text = "SMTP Password :")
         self.idleTimeLogout = Pmw.EntryField(master, labelpos=W,
                             label_text = "Idle Timeout (secs) :",
                             validate = "numeric")
         widgets = (self.nntpHost, self.nntpPort, self.nntpSecurity, 
                    self.nntpUser, self.nntpPassword, self.smtpHost, 
-                   self.smtpSecurity, self.idleTimeLogout)
+                   self.smtpPort, self.smtpSecurity, self.smtpUser,
+                   self.smtpPassword, self.idleTimeLogout)
         for w in widgets:
             w.pack(fill=X, expand=1, padx=10, pady=5)
         Pmw.alignlabels(widgets)
@@ -387,7 +400,10 @@ class EditServerData(altDialog.AltDialog):
         tmpRW.nntpUser = self.nntpUser.get().strip()
         tmpRW.nntpPassword = self.nntpPassword.get()
         tmpRW.smtpHost = self.smtpHost.get().strip()
+        tmpRW.smtpPort = int(self.smtpPort.get().strip())
         tmpRW.smtpSecurity = self.smtpSecurity.getvalue()
+        tmpRW.smtpUser = self.smtpUser.get().strip()
+        tmpRW.smtpPassword = self.smtpPassword.get()
         tmpRW.idleTimeLogout = int(self.idleTimeLogout.get().strip())
         if ServerUpdate(tmpRW) == None:
             cliVar.svr.rw = tmpRW

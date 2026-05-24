@@ -24,7 +24,10 @@ class EditLoginData(altDialog.AltDialog):
         self.nntpUser.setentry(cache.nntpUser)
         self.nntpPassword.setentry(cache.nntpPassword)
         self.smtpHost.setentry(cache.smtpHost)
+        self.smtpPort.setentry(cache.smtpPort)
         self.smtpSecurity.setvalue(str(cache.smtpSecurity))
+        self.smtpUser.setentry(cache.smtpUser)
+        self.smtpPassword.setentry(cache.smtpPassword)
 
     def Body(self, master):
         self.title("Edit Default Login Fields")
@@ -47,13 +50,20 @@ class EditLoginData(altDialog.AltDialog):
                             label_text = "NNTP Password :")
         self.smtpHost = Pmw.EntryField(master, labelpos=W,
                             label_text = "SMTP Host :")
+        self.smtpPort = Pmw.EntryField(master, labelpos=W,
+                            label_text = "SMTP Port :", validate = "numeric")
         self.smtpSecurity = Pmw.OptionMenu(master, labelpos=W,
                             label_text = "SMTP Security :",
                             items = ["Plaintext", "STARTTLS", "SSL"])
+        self.smtpUser = Pmw.EntryField(master, labelpos=W,
+                            label_text = "SMTP User :")
+        self.smtpPassword = Pmw.EntryField(master, labelpos=W,
+                            label_text = "SMTP Password :")
         widgets = (self.moderatorID, self.serviceHost, self.servicePort,
                    self.nntpHost, self.nntpPort, self.nntpSecurity,
                    self.nntpUser, self.nntpPassword, self.smtpHost,
-                   self.smtpSecurity)
+                   self.smtpPort, self.smtpSecurity, self.smtpUser,
+                   self.smtpPassword)
         for w in widgets:
             w.pack(fill=X, expand=1, padx=10, pady=5)
         Pmw.alignlabels(widgets)
@@ -71,7 +81,10 @@ class EditLoginData(altDialog.AltDialog):
         cache.nntpUser = self.nntpUser.get().strip()
         cache.nntpPassword = self.nntpPassword.get()
         cache.smtpHost = self.smtpHost.get().strip()
+        cache.smtpPort = int(self.smtpPort.get().strip())
         cache.smtpSecurity = self.smtpSecurity.getvalue()
+        cache.smtpUser = self.smtpUser.get().strip()
+        cache.smtpPassword = self.smtpPassword.get()
         app.WriteCache()
 
 class LoginDialog(altDialog.AltDialog):

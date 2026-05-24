@@ -49,7 +49,9 @@ def SendEMailReply(message, otherText):
     outHeaders = { ("From", 0): dialog.fromLine, ("To", 0): dialog.toLine,
                     ("Subject", 0): dialog.subjectLine }
     msg, errMsg = EmailMessage(allAddrs, outHeaders, msgBody,
-                               app.cache.smtpHost, app.cache.smtpSecurity)
+                               app.cache.smtpHost, app.cache.smtpPort,
+                               app.cache.smtpSecurity, app.cache.smtpUser,
+                               app.cache.smtpPassword)
     if errMsg:
         Oops(errMsg)
     return msg

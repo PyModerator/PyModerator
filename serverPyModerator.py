@@ -695,7 +695,10 @@ def PeriodicPost(newsGroupID, messageID):
                     txt, errMsg = EmailMessage(toAddrs, msg.ro.outHeaders,
                                                msg.ro.outTxt,
                                                serVar.app.rw.smtpHost,
-                                               serVar.app.rw.smtpSecurity)
+                                               serVar.app.rw.smtpPort,
+                                               serVar.app.rw.smtpSecurity,
+                                               serVar.app.rw.smtpUser,
+                                               serVar.app.rw.smtpPassword)
                     eventRW = EventRWData("Scheduled Email", errMsg)
                 # Add an appropriate event note each time.
                 msg.ro.events[0:0] = [ EventData("root", eventRW) ]
