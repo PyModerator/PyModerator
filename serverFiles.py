@@ -222,15 +222,19 @@ def ReadPOPMailbox(newsGroupID):
     app = serVar.app
     newsGroupFile = app.newsGroupFiles[newsGroupID]
     newsGroupRW = newsGroupFile.newsGroupData.rw
+    popTimeout = 20
     if not newsGroupRW.popHost:
         return 0
     try:
         if (newsGroupRW.popSSL):
             popServer = poplib.POP3_SSL(newsGroupRW.popHost, 
                                         newsGroupRW.popPort,
+                                        timeout=popTimeout,
                                         context=ssl.create_default_context())
         else:
-            popServer = poplib.POP3(newsGroupRW.popHost, newsGroupRW.popPort)
+            popServer = poplib.POP3(newsGroupRW.popHost,
+                                    newsGroupRW.popPort,
+                                    popTimeout)
         popServer.getwelcome()
         popServer.user(newsGroupRW.popUserID)
         popServer.pass_(newsGroupRW.popPassword)
