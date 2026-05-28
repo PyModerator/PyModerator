@@ -468,7 +468,9 @@ def ModerateNewsGroup(newsGroupID):
     if newsGroupID:
         if ServerSetNewsGroup(newsGroupID) == 1:
             # Update main display.
+            cliVar.app.balloon().showstatus("Checking for incoming posts...")
             NewsGroupGetIncomingPosts(cliVar.currentNewsGroupID)
+            cliVar.app.balloon().clearstatus()
             cliVar.currentNewsGroup = NewsGroupGet(newsGroupID)
     else:
         cliVar.currentNewsGroup = None
